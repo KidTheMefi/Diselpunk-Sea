@@ -15,6 +15,7 @@ public class Fire : MonoBehaviour
 
     private int _fireLvl;
     private bool _isOnFire = false;
+    public bool IsOnFire => _isOnFire;
     readonly System.Random _random = new System.Random();
 
     public void Setup(ShipModulePlace shipModulePlace)
@@ -76,7 +77,7 @@ public class Fire : MonoBehaviour
 
     private void FireValueChangePerSecond()
     {
-        int fireChangeValue = 10;
+        int fireChangeValue = 0;
         fireChangeValue -= _shipModulePlace.GetFireExtinguishing();
         _fireLvl += fireChangeValue;
         _slider.value = _fireLvl;

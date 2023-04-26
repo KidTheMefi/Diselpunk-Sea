@@ -24,6 +24,10 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3813497327194521024, guid: 2fec914833077044b979ccbf1f83e48c, type: 3}
+      propertyPath: _shell._baseDamage
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 3813497327194521024, guid: 2fec914833077044b979ccbf1f83e48c, type: 3}
       propertyPath: _shell._baseCrewDamage
       value: 1
       objectReference: {fileID: 0}

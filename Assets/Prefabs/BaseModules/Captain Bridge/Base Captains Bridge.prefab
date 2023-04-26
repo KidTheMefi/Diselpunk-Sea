@@ -44,13 +44,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2b9fdbef555a45ceb94d62ba0599c182, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  crewFull: 4
-  baseDurability: 4
+  crewFull: 2
+  baseDurability: 2
   minCrewRequired: 2
   minDurabilityRequired: 2
   textMeshProDescription: {fileID: 8015101719381830990}
   _maneuverabilityValue: 2
-  _detectionValue: 1
+  _detectionValue: 2
 --- !u!1001 &6126663673537817870
 PrefabInstance:
   m_ObjectHideFlags: 0

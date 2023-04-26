@@ -8,20 +8,28 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 1100453582695366153, guid: 01f9a7ee3e25d6f4bb85de8dfb1d80d6, type: 3}
+      propertyPath: crewFull
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1100453582695366153, guid: 01f9a7ee3e25d6f4bb85de8dfb1d80d6, type: 3}
+      propertyPath: baseDurability
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1100453582695366153, guid: 01f9a7ee3e25d6f4bb85de8dfb1d80d6, type: 3}
       propertyPath: _recoverability
-      value: 7
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 1100453582695366153, guid: 01f9a7ee3e25d6f4bb85de8dfb1d80d6, type: 3}
       propertyPath: minCrewRequired
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 1100453582695366153, guid: 01f9a7ee3e25d6f4bb85de8dfb1d80d6, type: 3}
       propertyPath: _repaireSkillValue
-      value: 4
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 1100453582695366153, guid: 01f9a7ee3e25d6f4bb85de8dfb1d80d6, type: 3}
       propertyPath: minDurabilityRequired
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 1100453582695366166, guid: 01f9a7ee3e25d6f4bb85de8dfb1d80d6, type: 3}
       propertyPath: m_RootOrder

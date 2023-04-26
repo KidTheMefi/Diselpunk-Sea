@@ -572,12 +572,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a1dbd1c8cbb34bff9e463164f5450c6e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  crewFull: 4
-  baseDurability: 4
-  minCrewRequired: 3
-  minDurabilityRequired: 3
+  crewFull: 2
+  baseDurability: 2
+  minCrewRequired: 1
+  minDurabilityRequired: 1
   textMeshProDescription: {fileID: 6775477438283204631}
-  _maneuverabilityValue: 3
+  _maneuverabilityValue: 2
 --- !u!1 &9057790885067609181
 GameObject:
   m_ObjectHideFlags: 0

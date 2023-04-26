@@ -21,10 +21,14 @@ public class BaseShip : MonoBehaviour
     private MedicineHandler _medicineHandler;
     [SerializeField]
     private ModulesHandler _modules;
+    [SerializeField]
+    private CommanderMoveHandler _commanderMoveHandler;
     
 
     [SerializeField]
     private BaseShip _ememyShip;
+    [SerializeField]
+    private bool controlledByPlayer;
 
     public int ManeuverabilityValue() => _maneuverabilityHandler.Maneuverability;
     public bool CanEvade() => _maneuverabilityHandler.CanEvade();
@@ -47,10 +51,6 @@ public class BaseShip : MonoBehaviour
         _repairSkillHandler.Setup(0, _modules.GetProvidersList<IRepairSkillProvider>(), advancedRepairProvider);        
         
         _detectionHandler.Setup(1, _modules.GetProvidersList<IDetectionProvider>());
-        
-        
-        
-        
         shipSurvivability.Setup(_modules.GetDurabilityModuleHandlers(), _repairSkillHandler, _modules.GetProvidersList<IRecoverabilityProvider>());
         shipCrewHandler.Begin(_modules.GetCrewModuleHandlers(), _medicineHandler);
         foreach (var moduleTR in _modules.GetProvidersList<ITargetRequired>())
@@ -63,6 +63,20 @@ public class BaseShip : MonoBehaviour
             moduleSCR.SetCharacteristics(this);
         }
         _modules.ActivateAllModules();
+
+
+        _commanderMoveHandler.ControlledByPlayer(controlledByPlayer);
+        Observation(false);
+    }
+
+    public void Observation(bool value)
+    {
+        if (controlledByPlayer)
+        {
+            return;
+        }
+        _commanderMoveHandler.ShowCommanders(value);
+        _modules.EnableHPVisual(value);
     }
 
     

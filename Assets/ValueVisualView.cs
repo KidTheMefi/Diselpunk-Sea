@@ -10,6 +10,8 @@ public class ValueVisualView : MonoBehaviour
     [SerializeField]
     private SpriteRenderer _maxValueVisual;
     [SerializeField]
+    private SpriteRenderer _minRequiredValueVisual;
+    [SerializeField]
     private SpriteRenderer _minValueRequiredVisual;
 
     private IntValue _value;
@@ -26,11 +28,13 @@ public class ValueVisualView : MonoBehaviour
     private Color _damagedColor;
     [SerializeField]
     private Color _activeColor;
+
+    public bool awaken;
+
     private void Awake()
     {
         _points = new List<SpriteRenderer>();
-
-        for (int i = 0; i < 10; i++)
+        for (int i = 0; i < _maxValue; i++)
         {
             var point = Instantiate(_pointVisual, transform);
             point.transform.localPosition = _pointVisual.transform.localPosition + _pointsDistance * Vector3.up * i;
@@ -38,27 +42,29 @@ public class ValueVisualView : MonoBehaviour
             point.color = _disableColor;
             _points.Add(point);
         }
-
-        var value = new IntValue(7);
-        value.SetValueTo(5);
-        SetMinRequiredPoints(3);
-        UpdateVisualPoints(value);
+        awaken = true;
     }
 
-    public void SetMinRequiredPoints(int value)
+    public void Setup(int minValueRequired)
     {
+        minValueRequired--;
+        /*Debug.Log(minValueRequired);
+       
+        _minValueRequiredVisual.gameObject.SetActive(minValueRequired > 0);
         if (_points.Count <= 0) return;
-        value = value < 0 ? 0 : value < _points.Count ? value : _points.Count -1;
-        _minValueRequiredVisual.transform.position = _points[value].transform.position;
-
+        minValueRequired = minValueRequired < 0 ? 0 : minValueRequired < _points.Count ? minValueRequired : _points.Count -1;
+        _minValueRequiredVisual.transform.localPosition = _points[minValueRequired].transform.localPosition +Vector3.up*0.5f;*/
+        
+        _minRequiredValueVisual.size = new Vector2(_minRequiredValueVisual.size.x, 0.75f + 0.5f * (minValueRequired));
     }
+    
     public void UpdateVisualPoints(IntValue points)
     {
-        _maxValueVisual.size = new Vector2(_maxValueVisual.size.x, 0.75f + 0.5f * points.MaxValue);
+        _maxValueVisual.size = new Vector2(_maxValueVisual.size.x, 0.75f + 0.5f * (points.MaxValue-1));
         
         for (int i = 0; i <_points.Count; i++)
         {
-            _points[i].color = i < points.CurrentValue ? _activeColor : i > points.MaxValue ? _disableColor : _damagedColor;
+            _points[i].color = i < points.CurrentValue ? _activeColor : i > points.MaxValue-1 ? _disableColor : _damagedColor;
         }
     }
 }

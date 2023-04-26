@@ -107,7 +107,15 @@ namespace ShipCharacteristics
                 }
                 else
                 {
-                    CurrentDeadCrewValue++;
+                    if (_medicineHandler.QuickRecovery())
+                    {
+                        CurrentInjuredCrewValue++;
+                        
+                    }
+                    else
+                    {
+                        CurrentDeadCrewValue++;
+                    }
                 }
                 
             }

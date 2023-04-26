@@ -18,7 +18,9 @@ namespace ShipModuleScripts.ModuleCrew
         [SerializeField]
         private SpriteRenderer _damageSpriteRenderer;
         [SerializeField]
-        private Slider _slider;
+        private ValueVisualView _valueVisualView;
+        [SerializeField]
+        private SpriteRenderer _warningRenderer;
         private CancellationTokenSource _crewRestoreCTS;
         private int _minCrewRequired = 3;
         private bool _canBeRestored;
@@ -36,7 +38,6 @@ namespace ShipModuleScripts.ModuleCrew
             _crewValue = crewValue;
             _defaultColor = _damageSpriteRenderer.color;
             _crewRestore.onValueChanged.AddListener(CrewChangeRestore);
-            SetupSlider();
             FunctionalityCheck();
             CanBeRestored(true);
             UpdateVisualView();
@@ -48,11 +49,15 @@ namespace ShipModuleScripts.ModuleCrew
             _crewSignals = crewSignals;
         }
 
+        private void Start()
+        {
+            SetupSlider();
+        }
+        
         private void SetupSlider()
         {
-            _slider.maxValue = _crewValue.MaxValue;
-            _slider.value = _crewValue.CurrentValue;
-            _slider.minValue = _crewValue.MinValue;
+            _valueVisualView.Setup(_minCrewRequired);
+            _valueVisualView.UpdateVisualPoints(_crewValue);
         }
 
         public void ChangeToggle(bool value)
@@ -131,7 +136,13 @@ namespace ShipModuleScripts.ModuleCrew
             _textMeshPro.text = $"{_crewValue.CurrentValue}/{_crewValue.MaxValue}";
             _textMeshPro.text += Functional ? "" : " not enough man!";
             _textMeshPro.color = Functional ? Color.white : Color.red;
-            _slider.value = _crewValue.CurrentValue;
+            
+            _warningRenderer.enabled = !Functional;
+            
+            if (_valueVisualView.awaken)
+            {
+                _valueVisualView.UpdateVisualPoints(_crewValue);
+            }
         }
 
         public void DamageCrew(int value)

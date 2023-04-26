@@ -22,51 +22,35 @@ namespace DefaultNamespace
         public ShipModulePlace[] DeckHousePlaces { get; private set;}
 
         [SerializeField]
-        private GameObject _lowerDeck;
+        private Deck _lowerDeck;
         [SerializeField]
-        private GameObject _mainDeck;
+        private Deck _mainDeck;
         [SerializeField]
-        private GameObject _deckHouse;
+        private Deck _deckHouse;
+
+       
 
         private void Awake()
         {
-            //modulesPlaces = gameObject.GetComponentsInChildren<ShipModulePlace>();
+            _lowerDeck.SetupDeck(_shipPlaceSignal);
+            _mainDeck.SetupDeck(_shipPlaceSignal);
+            _deckHouse.SetupDeck(_shipPlaceSignal);
             
-            LowerDeckPlaces = _lowerDeck.GetComponentsInChildren<ShipModulePlace>();
-            MainDeckPlaces = _mainDeck.GetComponentsInChildren<ShipModulePlace>();
-            DeckHousePlaces = _deckHouse.GetComponentsInChildren<ShipModulePlace>();
-
-
-            foreach (var modulePlace in LowerDeckPlaces)
-            {
-                SetupPlace(modulePlace, ModuleLocation.LowerDeck, 2);
-            }
-            
-            foreach (var modulePlace in MainDeckPlaces)
-            {
-                SetupPlace(modulePlace, ModuleLocation.MainDeck, 3);
-            }
-            
-            foreach (var modulePlace in DeckHousePlaces)
-            {
-                SetupPlace(modulePlace, ModuleLocation.DeckHouse, 1);
-            }
-            
-
             modulesPlaces = new List<ShipModulePlace>();
-            modulesPlaces.AddRange(LowerDeckPlaces);
-            modulesPlaces.AddRange(MainDeckPlaces);
-            modulesPlaces.AddRange(DeckHousePlaces);
+            
+            modulesPlaces.AddRange(_lowerDeck.DeckPlaces);
+            modulesPlaces.AddRange(_mainDeck.DeckPlaces);
+            modulesPlaces.AddRange(_deckHouse.DeckPlaces);
         }
 
-        private void SetupPlace(ShipModulePlace shipModulePlace, ModuleLocation moduleLocation, int armor)
+        public void EnableHPVisual(bool value)
         {
-            
-            shipModulePlace.SetLocation(ModuleLocation.MainDeck);
-            shipModulePlace.SetArmor(3);
-            shipModulePlace.SetShipPlaceSignal(_shipPlaceSignal);
+            foreach (var places in modulesPlaces)
+            {
+                places.HPVisible(value);
+            }
         }
-        
+
         public void ActivateAllModules()
         {
             foreach (var modulePlace in modulesPlaces)

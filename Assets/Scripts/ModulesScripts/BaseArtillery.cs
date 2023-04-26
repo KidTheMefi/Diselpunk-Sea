@@ -49,11 +49,7 @@ namespace ModulesScripts
             base.SetCommanderOnDuty(value);
             //_sightSpriteRenderer.enabled = value;
 
-            if (value)
-            {
-                
-            }
-            else
+            if (!value)
             {
                 DisableTarget();
             }

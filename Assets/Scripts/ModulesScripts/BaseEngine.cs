@@ -26,7 +26,7 @@ namespace ModulesScripts
 
         private void UpdateDescription()
         {
-            string description = $"Base Engine. " +
+            string description = $"{gameObject.name}. " +
                 $"+{_maneuverabilityValue} Maneuverability.  " +
                 $"{_speed} speed. " +
                 $"{GetBaseDescription()} ";

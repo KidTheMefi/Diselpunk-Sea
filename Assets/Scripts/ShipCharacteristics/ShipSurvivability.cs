@@ -34,7 +34,6 @@ namespace ShipCharacteristics
             
             _repairSignals = new DurabilitySignals(repairSkillHandler);
             _repairSkillHandle = repairSkillHandler;
-            _recoverabilityValue = 20;
             foreach (var recoverabilityProvider in recoverabilityProviders)
             {
                 _recoverabilityValue += recoverabilityProvider.GetAdditionalRecoverability();

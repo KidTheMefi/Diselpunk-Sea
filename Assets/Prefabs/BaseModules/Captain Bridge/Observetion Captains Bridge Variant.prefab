@@ -9,19 +9,23 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 6126663673458141084, guid: 69685488a66e99946bb71f079f271326, type: 3}
       propertyPath: crewFull
-      value: 4
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6126663673458141084, guid: 69685488a66e99946bb71f079f271326, type: 3}
+      propertyPath: baseDurability
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 6126663673458141084, guid: 69685488a66e99946bb71f079f271326, type: 3}
       propertyPath: _detectionValue
-      value: 7
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 6126663673458141084, guid: 69685488a66e99946bb71f079f271326, type: 3}
       propertyPath: minCrewRequired
-      value: 4
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 6126663673458141084, guid: 69685488a66e99946bb71f079f271326, type: 3}
       propertyPath: minDurabilityRequired
-      value: 4
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 6126663673458141085, guid: 69685488a66e99946bb71f079f271326, type: 3}
       propertyPath: m_RootOrder

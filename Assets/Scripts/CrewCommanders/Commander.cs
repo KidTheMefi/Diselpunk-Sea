@@ -1,7 +1,6 @@
 using System;
 using System.Threading;
 using Cysharp.Threading.Tasks;
-using DefaultNamespace;
 using UnityEngine;
 
 namespace CrewCommanders
@@ -9,7 +8,7 @@ namespace CrewCommanders
     public class Commander : MonoBehaviour
     {
         public event Action<Commander> OnCommanderClick = delegate(Commander place) { };
-        
+        public event Action<Commander> ReturnedTo = delegate(Commander place) { };
         
         [SerializeField, Range(0.1f , 12f)]
         private float _moveSpeed;
@@ -19,33 +18,59 @@ namespace CrewCommanders
         private int _battleLevel;
         [SerializeField, Range(1, 5)]
         private int _fireFightLevel;
-
+        [SerializeField]
+        private ValueVisualView _valueVisualView;
+        
+        private IntValue _hpValue = new IntValue(3);
+        private Vector3 _defaultPosition;
         public int RepairLevel => _repairLevel;
         
         private ShipModulePlace _shipModulePlaceTarget;
         private ShipModulePlace _shipModulePlaceOnDuty;
         private CancellationTokenSource _movingCTS;
+        public bool Moving { get; private set;}
 
         [SerializeField]
         private SpriteRenderer _selectRenderer;
         private void OnMouseDown()
         {
+            if (Moving)
+            {
+                return;
+            }
+            
             OnCommanderClick.Invoke(this);
             //CommanderSignal.GetInstance().InvokeCommanderClick(this);
         }
 
 
+        public void Damage()
+        {
+            _hpValue.ChangeValueFor(-1);
+            _valueVisualView.UpdateVisualPoints(_hpValue);
+            
+            if (_hpValue.CurrentValue <= 0)
+            {
+                MoveBackToDefaultPosition().Forget();
+            }
+        }
+
+        private void Start()
+        {
+            _defaultPosition = transform.position;
+            _valueVisualView.UpdateVisualPoints(_hpValue);
+        }
+        
         public async UniTask MoveToPlaceAsync(ShipModulePlace shipModulePlace)
         {
-            if (shipModulePlace.CommanderOnPost != null)
+            if (shipModulePlace.CommanderOnPost != null || Moving)
             {
-                Debug.Log(shipModulePlace.CommanderOnPost != null);
                 return;
             }
 
             if (_shipModulePlaceTarget != shipModulePlace)
             {
-                GoFromPost();
+                LeavePost();
                 
                 _movingCTS?.Cancel();
                 _movingCTS = new CancellationTokenSource();
@@ -60,15 +85,22 @@ namespace CrewCommanders
             }
         }
 
-        public void MoveFromPost( Vector3 moveTo)
+        public async UniTask MoveBackToDefaultPosition()
         {
-            GoFromPost();
+            if (Moving)
+            {
+                return;
+            }
+            LeavePost();
             _movingCTS?.Cancel();
             _movingCTS = new CancellationTokenSource();
-            MoveToAsync(moveTo, _movingCTS.Token).Forget();
+            await MoveToAsync(_defaultPosition, _movingCTS.Token);
+            _hpValue.SetValueTo(_hpValue.MaxValue);
+            _valueVisualView.UpdateVisualPoints(_hpValue);
+            ReturnedTo.Invoke(this);
         }
         
-        private void GoFromPost()
+        private void LeavePost()
         {
             _shipModulePlaceTarget = null;
             if (_shipModulePlaceOnDuty != null)
@@ -80,12 +112,18 @@ namespace CrewCommanders
 
         private void OnDuty()
         {
+            if (_shipModulePlaceTarget.CommanderOnPost != null)
+            {
+                _shipModulePlaceTarget.CommanderOnPost.MoveBackToDefaultPosition();
+            }
             _shipModulePlaceOnDuty = _shipModulePlaceTarget;
             _shipModulePlaceOnDuty.SetCommander(this);
+            Moving = false;
         }
 
         private async UniTask MoveToAsync(Vector3 pos, CancellationToken movingToken)
         {
+            Moving = true;
             float t = 0;
             Vector3 moveTargetPosition = pos + Vector3.back*0.2f;
             float interpolation = 0;
@@ -105,6 +143,7 @@ namespace CrewCommanders
                 transform.position = position;
                 return Mathf.Abs((position - moveTargetPosition).sqrMagnitude) < 0.1 || movingToken.IsCancellationRequested;*/
             }, cancellationToken: movingToken);
+            Moving = false;
         }
 
 

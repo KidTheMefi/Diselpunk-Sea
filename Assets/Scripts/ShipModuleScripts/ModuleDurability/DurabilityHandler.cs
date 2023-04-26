@@ -18,7 +18,7 @@ namespace ShipModuleScripts.ModuleDurability
         [SerializeField]
         private SpriteRenderer _damageSpriteRenderer;
         [SerializeField]
-        private Slider _slider;
+        private ValueVisualView _valueVisualView;
         [SerializeField]
         private SliderTimer _repairTimer;
         [SerializeField]
@@ -41,7 +41,6 @@ namespace ShipModuleScripts.ModuleDurability
             _durabilityValue = durabilityValue;
             _defaultColor = _damageSpriteRenderer.color;
             _durabilityRestore.onValueChanged.AddListener(ChangeToggle);
-            SetupSlider();
             FunctionalityCheck();
             UpdateVisualView();
         }
@@ -49,6 +48,8 @@ namespace ShipModuleScripts.ModuleDurability
         public void SetupSignal(DurabilitySignals durabilitySignals)
         {
             _durabilitySignals = durabilitySignals;
+            
+            
         }
 
         private void RepairToValue(float value)
@@ -63,19 +64,20 @@ namespace ShipModuleScripts.ModuleDurability
             }
             
         }
-        
+
+        private void Start()
+        {
+            SetupSlider();
+        }
         private void SetupSlider()
         {
-            _slider.maxValue = _durabilityValue.MaxValue;
-            _slider.value = _durabilityValue.CurrentValue;
-            _slider.minValue = _durabilityValue.MinValue;
-            
+            _valueVisualView.Setup(_minDurabilityRequired);
+            _valueVisualView.UpdateVisualPoints(_durabilityValue);
             _repairValueSlider.maxValue = _durabilityValue.MaxValue;
             //_repairValueSlider.SetValueWithoutNotify(_minDurabilityRequired);
             _repairValueSlider.value = _durabilityValue.MaxValue;
             _repairValueSlider.minValue = _durabilityValue.MinValue;
             _repairValueSlider.onValueChanged.AddListener(RepairToValue);
-            
         }
 
         public void ChangeToggle(bool value)
@@ -188,7 +190,11 @@ namespace ShipModuleScripts.ModuleDurability
             {
                 _warningRenderer.gameObject.SetActive(false); 
             }
-            _slider.value = _durabilityValue.CurrentValue;
+
+            if (_valueVisualView.awaken)
+            {
+                _valueVisualView.UpdateVisualPoints(_durabilityValue);
+            }
         }
 
         public void Damage(int value)

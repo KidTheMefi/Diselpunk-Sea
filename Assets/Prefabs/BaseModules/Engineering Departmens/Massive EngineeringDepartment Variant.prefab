@@ -9,18 +9,26 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1100453582695366153, guid: 01f9a7ee3e25d6f4bb85de8dfb1d80d6, type: 3}
       propertyPath: crewFull
-      value: 9
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 1100453582695366153, guid: 01f9a7ee3e25d6f4bb85de8dfb1d80d6, type: 3}
       propertyPath: baseDurability
-      value: 9
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 1100453582695366153, guid: 01f9a7ee3e25d6f4bb85de8dfb1d80d6, type: 3}
       propertyPath: _recoverability
       value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 1100453582695366153, guid: 01f9a7ee3e25d6f4bb85de8dfb1d80d6, type: 3}
+      propertyPath: minCrewRequired
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 1100453582695366153, guid: 01f9a7ee3e25d6f4bb85de8dfb1d80d6, type: 3}
       propertyPath: _repaireSkillValue
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 1100453582695366153, guid: 01f9a7ee3e25d6f4bb85de8dfb1d80d6, type: 3}
+      propertyPath: minDurabilityRequired
       value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 1100453582695366166, guid: 01f9a7ee3e25d6f4bb85de8dfb1d80d6, type: 3}
@@ -69,7 +77,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1100453582695366167, guid: 01f9a7ee3e25d6f4bb85de8dfb1d80d6, type: 3}
       propertyPath: m_Name
-      value: Massive EngineeringDepartment
+      value: Massive EngineeringDepartment Variant
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 01f9a7ee3e25d6f4bb85de8dfb1d80d6, type: 3}
