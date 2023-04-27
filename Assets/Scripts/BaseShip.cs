@@ -1,7 +1,10 @@
 
+using System;
+using Cysharp.Threading.Tasks;
 using DefaultNamespace;
 using InterfaceProviders;
 using ShipCharacteristics;
+using ShipModuleScripts.ModuleDurability;
 using UnityEngine;
 
 public class BaseShip : MonoBehaviour
@@ -20,9 +23,13 @@ public class BaseShip : MonoBehaviour
     [SerializeField]
     private MedicineHandler _medicineHandler;
     [SerializeField]
+    private SpeedHandler _speedHandler;
+    [SerializeField]
     private ModulesHandler _modules;
     [SerializeField]
     private CommanderMoveHandler _commanderMoveHandler;
+    [SerializeField]
+    private RetreatHandler _retreatHandler;
     
 
     [SerializeField]
@@ -34,25 +41,32 @@ public class BaseShip : MonoBehaviour
     public bool CanEvade() => _maneuverabilityHandler.CanEvade();
     public int DetectionValue() => _detectionHandler.Detection; // write detection handler and providers
     public ModulesHandler Modules => _modules;
+    public SpeedHandler SpeedHandler => _speedHandler;
     
     void Start()
     {
-        var evasionProviderList = _modules.GetProvidersList<IEvasionProvider>();
-        var evasionProvider = evasionProviderList.Count > 0 ? evasionProviderList[0] : null;
-        _maneuverabilityHandler.Setup(1, _modules.GetProvidersList<IManeuverabilityProvider>(), evasionProvider);
+        Setup().Forget();
+    }
+
+    private async UniTask Setup()
+    {
+        await _modules.SetupDecks();
         
-        var quickRecoveryProviderList = _modules.GetProvidersList<IQuickRecoveryProvider>();
-        var quickRecoveryProvider = quickRecoveryProviderList.Count > 0 ? quickRecoveryProviderList[0] : null;
-        _medicineHandler.Setup(0,_modules.GetProvidersList<IMedicineProvider>(), quickRecoveryProvider);
+        var durabilitySignal = new DurabilitySignals(_repairSkillHandler);
+
+        foreach (var durabilityHandler in _modules.GetDurabilityModuleHandlers())
+        {
+            durabilityHandler.SetupSignal(durabilitySignal);
+        }
         
+        SetupManeuverability();
+        SetupMedicine();
+        SetupRepair();
         
-        var advancedRepairProviderList = _modules.GetProvidersList<IAdvancedRepairProvider>();
-        var advancedRepairProvider = advancedRepairProviderList.Count > 0 ? advancedRepairProviderList[0] : null;
-        _repairSkillHandler.Setup(0, _modules.GetProvidersList<IRepairSkillProvider>(), advancedRepairProvider);        
-        
+        _speedHandler.Setup(_modules.GetProvidersList<ISpeedProvider>());
         _detectionHandler.Setup(1, _modules.GetProvidersList<IDetectionProvider>());
-        shipSurvivability.Setup(_modules.GetDurabilityModuleHandlers(), _repairSkillHandler, _modules.GetProvidersList<IRecoverabilityProvider>());
-        shipCrewHandler.Begin(_modules.GetCrewModuleHandlers(), _medicineHandler);
+        
+        
         foreach (var moduleTR in _modules.GetProvidersList<ITargetRequired>())
         {
             moduleTR.SetShipTarget(_ememyShip);
@@ -62,11 +76,37 @@ public class BaseShip : MonoBehaviour
         {
             moduleSCR.SetCharacteristics(this);
         }
+
+        
+        shipSurvivability.Setup(_modules.GetDurabilityModuleHandlers(), _repairSkillHandler, _modules.GetProvidersList<IRecoverabilityProvider>(), durabilitySignal);
+        shipCrewHandler.Setup(_modules.GetCrewModuleHandlers(), _medicineHandler);
         _modules.ActivateAllModules();
 
 
+        _retreatHandler.Setup(_speedHandler, _ememyShip.SpeedHandler, controlledByPlayer);
         _commanderMoveHandler.ControlledByPlayer(controlledByPlayer);
         Observation(false);
+    }
+
+    private void SetupManeuverability()
+    {
+        var evasionProviderList = _modules.GetProvidersList<IEvasionProvider>();
+        var evasionProvider = evasionProviderList.Count > 0 ? evasionProviderList[0] : null;
+        _maneuverabilityHandler.Setup(1, _modules.GetProvidersList<IManeuverabilityProvider>(), evasionProvider);
+    }
+
+    private void SetupMedicine()
+    {
+        var quickRecoveryProviderList = _modules.GetProvidersList<IQuickRecoveryProvider>();
+        var quickRecoveryProvider = quickRecoveryProviderList.Count > 0 ? quickRecoveryProviderList[0] : null;
+        _medicineHandler.Setup(0,_modules.GetProvidersList<IMedicineProvider>(), quickRecoveryProvider);
+    }
+
+    private void SetupRepair()
+    {
+        var advancedRepairProviderList = _modules.GetProvidersList<IAdvancedRepairProvider>();
+        var advancedRepairProvider = advancedRepairProviderList.Count > 0 ? advancedRepairProviderList[0] : null;
+        _repairSkillHandler.Setup(0, _modules.GetProvidersList<IRepairSkillProvider>(), advancedRepairProvider);
     }
 
     public void Observation(bool value)

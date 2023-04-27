@@ -38,22 +38,23 @@ namespace ShipModuleScripts.ModuleCrew
             _crewValue = crewValue;
             _defaultColor = _damageSpriteRenderer.color;
             _crewRestore.onValueChanged.AddListener(CrewChangeRestore);
-            FunctionalityCheck();
-            CanBeRestored(true);
-            UpdateVisualView();
+            
+           
         }
-        
         
         public void SetSignals(CrewSignals crewSignals)
         {
             _crewSignals = crewSignals;
         }
 
-        private void Start()
-        {
+        public void Begin()
+        { 
+            FunctionalityCheck();
+            CanBeRestored(true);
+            UpdateVisualView();
             SetupSlider();
         }
-        
+
         private void SetupSlider()
         {
             _valueVisualView.Setup(_minCrewRequired);
@@ -180,7 +181,6 @@ namespace ShipModuleScripts.ModuleCrew
                 
                 Functional = !Functional;
                 FunctionalityChange.Invoke();
-                
             }
         }
     }

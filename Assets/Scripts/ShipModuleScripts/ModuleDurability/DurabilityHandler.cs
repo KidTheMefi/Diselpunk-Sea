@@ -26,7 +26,7 @@ namespace ShipModuleScripts.ModuleDurability
         [SerializeField]
         private Slider _repairValueSlider;
         private CancellationTokenSource _repairCTS;
-        private int _minDurabilityRequired = 3;
+        private int _minDurabilityRequired = 1;
         private bool _enoughCrewForRepair = true;
         private DurabilitySignals _durabilitySignals;
         public bool Functional { get; private set; }
@@ -41,15 +41,19 @@ namespace ShipModuleScripts.ModuleDurability
             _durabilityValue = durabilityValue;
             _defaultColor = _damageSpriteRenderer.color;
             _durabilityRestore.onValueChanged.AddListener(ChangeToggle);
-            FunctionalityCheck();
-            UpdateVisualView();
+            SetupSlider();
         }
 
+        
         public void SetupSignal(DurabilitySignals durabilitySignals)
         {
             _durabilitySignals = durabilitySignals;
-            
-            
+        }
+        
+        public void Begin()
+        {
+            FunctionalityCheck();
+            UpdateVisualView();
         }
 
         private void RepairToValue(float value)
@@ -62,13 +66,8 @@ namespace ShipModuleScripts.ModuleDurability
             {
                 _repairCTS?.Cancel();
             }
-            
         }
-
-        private void Start()
-        {
-            SetupSlider();
-        }
+        
         private void SetupSlider()
         {
             _valueVisualView.Setup(_minDurabilityRequired);
@@ -122,6 +121,15 @@ namespace ShipModuleScripts.ModuleDurability
 
         private bool CanBeRepaired()
         {
+            if (_durabilityRestore == null)
+            {
+                Debug.Log("_durabilityRestore == null");
+            }
+            
+            if (_durabilitySignals == null)
+            {
+                Debug.Log("_durabilitySignals == null");
+            }
             return _durabilityRestore.isOn && _enoughCrewForRepair && _durabilitySignals.HasRecoverabilityPoint;
         }
 

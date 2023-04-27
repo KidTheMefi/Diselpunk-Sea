@@ -88,6 +88,8 @@ namespace ModulesScripts
             _sightSpriteRenderer.enabled = value;
             _waitingForTarget = value;
         }
+        
+        
         private void SetTargetModulePlace(ShipModulePlace obj)
         {
             _lineToTargetRenderer.enabled = true;

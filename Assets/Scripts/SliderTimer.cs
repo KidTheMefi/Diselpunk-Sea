@@ -31,7 +31,7 @@ namespace DefaultNamespace
             _slider.minValue = 0;
             _slider.maxValue = _currentTime;
             _slider.value = _currentTime;
-            
+
             await UniTask.WaitUntil(() =>
             {
                 _currentTime -= Time.deltaTime;
@@ -45,11 +45,11 @@ namespace DefaultNamespace
         public void ChangeRepairTime(float newTime)
         {
 
-            if ( _token == CancellationToken.None || _token.IsCancellationRequested)
+            if (_token == CancellationToken.None || _token.IsCancellationRequested)
             {
                 return;
             }
-            
+
             float newSliderValue = _slider.value * newTime / _slider.maxValue;
             _currentTime = newSliderValue;
             _slider.maxValue = newTime;

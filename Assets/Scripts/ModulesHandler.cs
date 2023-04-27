@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using ShipModuleScripts.ModuleCrew;
 using ShipModuleScripts.ModuleDurability;
 using UnityEngine;
@@ -27,10 +28,9 @@ namespace DefaultNamespace
         private Deck _mainDeck;
         [SerializeField]
         private Deck _deckHouse;
+        
 
-       
-
-        private void Awake()
+        public async UniTask SetupDecks()
         {
             _lowerDeck.SetupDeck(_shipPlaceSignal);
             _mainDeck.SetupDeck(_shipPlaceSignal);
@@ -41,6 +41,8 @@ namespace DefaultNamespace
             modulesPlaces.AddRange(_lowerDeck.DeckPlaces);
             modulesPlaces.AddRange(_mainDeck.DeckPlaces);
             modulesPlaces.AddRange(_deckHouse.DeckPlaces);
+
+            await UniTask.Yield();
         }
 
         public void EnableHPVisual(bool value)

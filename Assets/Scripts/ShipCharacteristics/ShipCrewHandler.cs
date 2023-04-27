@@ -27,7 +27,7 @@ namespace ShipCharacteristics
         private DateTime _startTime;
         private MedicineHandler _medicineHandler;
         
-        public void Begin(CrewHandler[] crews, MedicineHandler medicineHandler)
+        public void Setup(CrewHandler[] crews, MedicineHandler medicineHandler)
         {
             _medicineHandler = medicineHandler;
             _startTime = DateTime.Now;   

@@ -12,12 +12,17 @@ namespace DefaultNamespace
         private int _armor;
         [SerializeField]
         private ModuleLocation _moduleLocation;
+        [SerializeField, Range(1, 10)]
+        private int _baseDurability;
+        [SerializeField, Range(1, 10)]
+        private int _baseCrew;
         public ShipModulePlace[] DeckPlaces { get; private set;}
         
         private void Awake()
         {
             DeckPlaces = GetComponentsInChildren<ShipModulePlace>();
         }
+        
         public void SetupDeck(ShipPlaceSignal shipPlaceSignal)
         {
             SetArmorValueText(_armor);
@@ -36,9 +41,7 @@ namespace DefaultNamespace
         private void SetupPlace(ShipModulePlace shipModulePlace, ShipPlaceSignal shipPlaceSignal)
         {
             
-            shipModulePlace.SetLocation(_moduleLocation);
-            shipModulePlace.SetArmor(_armor);
-            shipModulePlace.SetShipPlaceSignal(shipPlaceSignal);
+            shipModulePlace.Setup(_baseDurability, _baseCrew, _armor, _moduleLocation, shipPlaceSignal);
         }
     }
 }

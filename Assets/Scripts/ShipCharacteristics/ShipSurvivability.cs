@@ -21,24 +21,24 @@ namespace ShipCharacteristics
         private int SurvivabilityValue;
         private int FullSurvivabilityValue;
 
-        private DurabilitySignals _repairSignals;
+        private DurabilitySignals _durabilitySignals;
         private RepairSkillHandler _repairSkillHandle;
 
         private DateTime _startTime;
 
-        public void Setup(DurabilityHandler[] modulesDurability, RepairSkillHandler repairSkillHandler, List<IRecoverabilityProvider> recoverabilityProviders)
+        public void Setup(DurabilityHandler[] modulesDurability, RepairSkillHandler repairSkillHandler, List<IRecoverabilityProvider> recoverabilityProviders, DurabilitySignals durabilitySignals)
         {
             _startTime = DateTime.Now;
 
             _modulesDurabilityHandlers = modulesDurability;
-            
-            _repairSignals = new DurabilitySignals(repairSkillHandler);
+
+            _durabilitySignals = durabilitySignals;
             _repairSkillHandle = repairSkillHandler;
             foreach (var recoverabilityProvider in recoverabilityProviders)
             {
                 _recoverabilityValue += recoverabilityProvider.GetAdditionalRecoverability();
             }
-            _repairSignals.HaveRecoverabilityPoint(_recoverabilityValue > 0);
+            _durabilitySignals.HaveRecoverabilityPoint(_recoverabilityValue > 0);
 
             SurvivabilityValue = 0;
             FullSurvivabilityValue = 0;
@@ -46,11 +46,11 @@ namespace ShipCharacteristics
             {
                 FullSurvivabilityValue += durabilityHandler.DurabilityValue.MaxValue;
                 SurvivabilityValue += durabilityHandler.DurabilityValue.CurrentValue;
-                durabilityHandler.SetupSignal(_repairSignals);
+               // durabilityHandler.SetupSignal(_durabilitySignals);
             }
 
-            _repairSignals.DurabilityDamaged += RepairSignalsOnDamaged;
-            _repairSignals.RequestRepair += RepairSignalsOnRepair;
+            _durabilitySignals.DurabilityDamaged += DurabilitySignalsOnDamaged;
+            _durabilitySignals.RequestRepair += DurabilitySignalsOnDurability;
 
             _toggle.onValueChanged.AddListener(OnToggleValueChange);
             UpdateSurvivabilityText();
@@ -65,17 +65,17 @@ namespace ShipCharacteristics
             }
         }
 
-        private void RepairSignalsOnRepair(DurabilityHandler crewHandler, int value)
+        private void DurabilitySignalsOnDurability(DurabilityHandler crewHandler, int value)
         {
             if (_recoverabilityValue < 1)
             {
-                _repairSignals.HaveRecoverabilityPoint(false);
+                _durabilitySignals.HaveRecoverabilityPoint(false);
                 return;
             }
             value = value > _recoverabilityValue ? _recoverabilityValue : value;
             _recoverabilityValue -= value;
-            
-            value = _repairSkillHandle.AdvancedRepair && AdvancedRepair() ? value*2: value;
+
+            value = _repairSkillHandle.AdvancedRepair && AdvancedRepair() ? value * 2 : value;
             SurvivabilityValue += value;
             crewHandler.Repair(value);
             UpdateSurvivabilityText();
@@ -83,11 +83,11 @@ namespace ShipCharacteristics
 
         private bool AdvancedRepair()
         {
-            var advancedRepair = _repairSkillHandle.RepairSkill *10;
+            var advancedRepair = _repairSkillHandle.RepairSkill * 10;
             return Random.Range(0, 100) < advancedRepair;
         }
 
-        private void RepairSignalsOnDamaged(int value)
+        private void DurabilitySignalsOnDamaged(int value)
         {
             SurvivabilityValue -= value;
             if (SurvivabilityValue < 0.3f * FullSurvivabilityValue)
@@ -111,8 +111,8 @@ namespace ShipCharacteristics
 
         private void OnDestroy()
         {
-            _repairSignals.DurabilityDamaged -= RepairSignalsOnDamaged;
-            _repairSignals.RequestRepair -= RepairSignalsOnRepair;
+            _durabilitySignals.DurabilityDamaged -= DurabilitySignalsOnDamaged;
+            _durabilitySignals.RequestRepair -= DurabilitySignalsOnDurability;
         }
     }
 }

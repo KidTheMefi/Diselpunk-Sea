@@ -12,6 +12,10 @@ PrefabInstance:
       value: FastEngine Variant
       objectReference: {fileID: 0}
     - target: {fileID: 9057790884896693699, guid: cc07d9bab21ed1d4b8240d3c2cf7f81c, type: 3}
+      propertyPath: _speed
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 9057790884896693699, guid: cc07d9bab21ed1d4b8240d3c2cf7f81c, type: 3}
       propertyPath: crewFull
       value: 3
       objectReference: {fileID: 0}

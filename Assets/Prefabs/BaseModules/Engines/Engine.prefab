@@ -578,6 +578,7 @@ MonoBehaviour:
   minDurabilityRequired: 1
   textMeshProDescription: {fileID: 6775477438283204631}
   _maneuverabilityValue: 2
+  _speed: 2
 --- !u!1 &9057790885067609181
 GameObject:
   m_ObjectHideFlags: 0

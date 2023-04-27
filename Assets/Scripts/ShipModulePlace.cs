@@ -9,8 +9,6 @@ using Random = UnityEngine.Random;
 
 public class ShipModulePlace : MonoBehaviour
 {
-    //public event Action<ShipModulePlace> OnShipModulePlaceClick = delegate(ShipModulePlace place) { };
-
     [SerializeField]
     private CrewHandler _crewHandler;
     public CrewHandler CrewHandler => _crewHandler;
@@ -25,9 +23,7 @@ public class ShipModulePlace : MonoBehaviour
     private ShipModule _shipModulePrefab;
     private ShipModule _shipModule;
     public ModuleLocation ModuleLocation { get; private set; }
-
-    private int _baseDurability = 5;
-    private int _baseCrew = 3;
+    
     private int _baseFireExtinguishing = 1;
     public int Armor { get; private set; }
 
@@ -40,44 +36,44 @@ public class ShipModulePlace : MonoBehaviour
 
     private void Awake()
     {
-        int minCrewRequired = 1;
-        int minDurabilityRequired = 0;
-        int durability = Random.Range(0, 1); //_baseDurability;
-        int crew = Random.Range(0, 1);
+        
 
         if (_shipModulePrefab != null)
         {
             _shipModule = Instantiate(_shipModulePrefab, transform);
             _shipModule.transform.localPosition = Vector3.zero;
-            durability += _shipModule.BaseDurability;
-            crew += _shipModule.CrewFull;
-            minCrewRequired = _shipModule.MinCrewRequired;
-            minDurabilityRequired = _shipModule.MinDurabilityRequired;
         }
 
         _fire.Setup(this);
-        _crewHandler.Setup(new IntValue(crew), minCrewRequired);
-        _durabilityHandler.Setup(new IntValue(durability), minDurabilityRequired);
         _crewHandler.FunctionalityChange += OnCrewFunctionalityChanged;
         _durabilityHandler.FunctionalityChange += OnFunctionalityChange;
     }
 
-    public void SetLocation(ModuleLocation moduleLocation)
+    public void Setup(int baseDurability, int baseCrew, int armor, ModuleLocation moduleLocation, ShipPlaceSignal shipPlaceSignal)
     {
-        ModuleLocation = moduleLocation;
-    }
-    public void SetShipPlaceSignal(ShipPlaceSignal shipPlaceSignal)
-    {
-        _shipPlaceSignal = shipPlaceSignal;
-    }
+        int minCrewRequired = 1;
+        int minDurabilityRequired = 0;
 
-    public void SetArmor(int value)
-    {
-        Armor = value > 0 ? value : 0;
+        if (_shipModule != null)
+        {
+            baseDurability += _shipModule.BaseDurability;
+            baseCrew += _shipModule.CrewFull;
+            minCrewRequired = _shipModule.MinCrewRequired;
+            minDurabilityRequired = _shipModule.MinDurabilityRequired;
+        }
+        
+        _crewHandler.Setup(new IntValue(baseCrew), minCrewRequired);
+        _durabilityHandler.Setup(new IntValue(baseDurability), minDurabilityRequired);
+        
+        Armor = armor > 0 ? armor : 0;
+        ModuleLocation = moduleLocation;
+        _shipPlaceSignal = shipPlaceSignal;
     }
 
     public void CheckAndStartModule()
     {
+        _durabilityHandler.Begin();
+        _crewHandler.Begin();
         if (_shipModule != null)
         {
             _shipModule.SetActive(_isModuleActive);
@@ -153,8 +149,6 @@ public class ShipModulePlace : MonoBehaviour
         provider = default(T);
         if (_shipModule is T newProvider)
         {
-            // string description = $"Try Get {typeof(T).Name}";
-            //  Debug.Log(description + " Success");
             provider = newProvider;
             return true;
         }
@@ -168,13 +162,10 @@ public class ShipModulePlace : MonoBehaviour
     }
     private void OnMouseDown()
     {
-        //OnShipModulePlaceClick.Invoke(this);
         _shipPlaceSignal.InvokePLaceClick(this);
         if (_shipModule != null)
         {
             _shipModule.ClickOn();
         }
-
-        //ShipPlaceSignal.GetInstance().InvokePLaceClick(this);
     }
 }
