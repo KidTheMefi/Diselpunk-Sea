@@ -27,6 +27,7 @@ namespace ModulesScripts
         private BaseShip _shipTarget;
         private BaseShip _thisShip;
         private bool _waitingForTarget;
+        private bool _inBattle;
         private CancellationTokenSource _fireCTS;
         private ShipModulePlace _targetPlace;
 
@@ -38,6 +39,8 @@ namespace ModulesScripts
         public void SetShipTarget(BaseShip targetShip)
         {
             _shipTarget = targetShip;
+            _inBattle = true;
+            SetActive(IsInOrder);
         }
 
         public void SetCharacteristics(BaseShip thisShip)
@@ -51,11 +54,11 @@ namespace ModulesScripts
 
             if (!value)
             {
-                DisableTarget();
+                DisableAiming();
             }
         }
 
-        private void DisableTarget()
+        private void DisableAiming()
         {
             _lineToTargetRenderer.enabled = false;
             _targetPlace = null;
@@ -79,18 +82,18 @@ namespace ModulesScripts
             }
             if (value)
             {
-                _shipTarget.Modules.ShipPlaceSignal.OnShipModulePlaceClick += SetTargetModulePlace;
+                _shipTarget.Modules.ShipPlaceSignal.OnShipModulePlaceClick += AimingForModulePlace;
             }
             else
             {
-                _shipTarget.Modules.ShipPlaceSignal.OnShipModulePlaceClick -= SetTargetModulePlace;
+                _shipTarget.Modules.ShipPlaceSignal.OnShipModulePlaceClick -= AimingForModulePlace;
             }
             _sightSpriteRenderer.enabled = value;
             _waitingForTarget = value;
         }
         
         
-        private void SetTargetModulePlace(ShipModulePlace obj)
+        private void AimingForModulePlace(ShipModulePlace obj)
         {
             _lineToTargetRenderer.enabled = true;
             _lineToTargetRenderer.useWorldSpace = true;
@@ -183,8 +186,6 @@ namespace ModulesScripts
                 $"{_shell.ShellType}.  " +
                 $"{_reloadTime}+{_aiming} min shoot Time. " /*+
                 $"{GetBaseDescription()} "*/;
-
-            description += IsInOrder ? "" : "Out of order!";
             textMeshProDescription.text = description;
         }
 
@@ -192,6 +193,12 @@ namespace ModulesScripts
         {
             IsInOrder = value;
             UpdateDescription();
+
+            if (!_inBattle)
+            {
+                return;
+            }
+            
             if (IsInOrder)
             {
                 _fireCTS?.Cancel();
@@ -200,11 +207,19 @@ namespace ModulesScripts
             }
             else
             {
-                DisableTarget();
+                DisableAiming();
                 _fireCTS?.Cancel();
                 _timerText.text = "out of order";
             }
         }
+
+        public void BattleEnd()
+        {
+            DisableAiming();
+            _fireCTS?.Cancel();
+            _inBattle = false;
+        }
+        
         private void OnDisable()
         {
             SetActive(false);

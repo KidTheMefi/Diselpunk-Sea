@@ -4,7 +4,6 @@ namespace DefaultNamespace
 {
     public class ArtilleryVolleyFactory : MonoBehaviour
     {
-        
         private static ArtilleryVolleyFactory _instance;
         public static ArtilleryVolleyFactory Instance => _instance;
         
@@ -59,6 +58,5 @@ namespace DefaultNamespace
             bombshell.transform.position = Vector3.up*20;
             _characterPool.ReturnObject(bombshell);
         }
-        
     }
 }

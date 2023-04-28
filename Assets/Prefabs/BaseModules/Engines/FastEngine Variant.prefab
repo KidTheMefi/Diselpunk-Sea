@@ -13,19 +13,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9057790884896693699, guid: cc07d9bab21ed1d4b8240d3c2cf7f81c, type: 3}
       propertyPath: _speed
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 9057790884896693699, guid: cc07d9bab21ed1d4b8240d3c2cf7f81c, type: 3}
       propertyPath: crewFull
-      value: 3
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 9057790884896693699, guid: cc07d9bab21ed1d4b8240d3c2cf7f81c, type: 3}
       propertyPath: baseDurability
-      value: 3
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 9057790884896693699, guid: cc07d9bab21ed1d4b8240d3c2cf7f81c, type: 3}
       propertyPath: minCrewRequired
-      value: 3
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 9057790884896693699, guid: cc07d9bab21ed1d4b8240d3c2cf7f81c, type: 3}
       propertyPath: _maneuverabilityValue
@@ -33,7 +33,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9057790884896693699, guid: cc07d9bab21ed1d4b8240d3c2cf7f81c, type: 3}
       propertyPath: minDurabilityRequired
-      value: 3
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 9057790884896693700, guid: cc07d9bab21ed1d4b8240d3c2cf7f81c, type: 3}
       propertyPath: m_RootOrder

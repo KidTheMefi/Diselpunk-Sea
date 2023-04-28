@@ -19,6 +19,10 @@ namespace DefaultNamespace
         }
         private void ResetTimer()
         {
+            if (_slider == null)
+            {
+                return;
+            }
             _slider.minValue = 0;
             _slider.maxValue = 1;
             _slider.value = 1;

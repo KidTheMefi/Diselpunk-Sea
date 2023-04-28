@@ -49,7 +49,7 @@ MonoBehaviour:
   minCrewRequired: 2
   minDurabilityRequired: 2
   textMeshProDescription: {fileID: 8015101719381830990}
-  _maneuverabilityValue: 2
+  _maneuverabilityValue: 1
   _detectionValue: 2
 --- !u!1001 &6126663673537817870
 PrefabInstance:

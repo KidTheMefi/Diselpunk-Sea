@@ -23,8 +23,6 @@ namespace ModulesScripts
             string description = $"Engineering Department. " +
                 $"+{_repaireSkillValue} repair.  " +
                 $"{GetBaseDescription()} ";
-
-            description += IsInOrder ? "" : "Out of order!";
             textMeshProDescription.text = description;
         }
 

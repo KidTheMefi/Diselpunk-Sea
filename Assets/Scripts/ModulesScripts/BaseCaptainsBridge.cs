@@ -32,8 +32,6 @@ namespace ModulesScripts
             string description = $"Captains Bridge. " +
                 $"+{_maneuverabilityValue} Maneuverability.  " +
                 $"{GetBaseDescription()} ";
-            
-            description += IsInOrder ? "" : "Out of order!"; 
             textMeshProDescription.text = description;
         }
         

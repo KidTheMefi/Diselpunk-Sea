@@ -28,7 +28,7 @@ namespace ShipModuleScripts.ModuleCrew
         public bool Functional { get; private set; }
         private IntValue _crewValue = new IntValue(10);
         public IntValue CrewValue => _crewValue;
-        private float crewRestorationTime = 2f;
+        private float crewRestorationTime = 3f;
         private Color _defaultColor;
 
 
@@ -38,8 +38,6 @@ namespace ShipModuleScripts.ModuleCrew
             _crewValue = crewValue;
             _defaultColor = _damageSpriteRenderer.color;
             _crewRestore.onValueChanged.AddListener(CrewChangeRestore);
-            
-           
         }
         
         public void SetSignals(CrewSignals crewSignals)
@@ -163,7 +161,7 @@ namespace ShipModuleScripts.ModuleCrew
         private async UniTask DamageHighlight()
         {
             _damageSpriteRenderer.color = Color.red;
-            await UniTask.Delay(TimeSpan.FromSeconds(0.2f));
+            await UniTask.Delay(TimeSpan.FromSeconds(0.2f), cancellationToken: _crewRestoreCTS.Token);
             _damageSpriteRenderer.color = _defaultColor;
         }
 
@@ -182,6 +180,10 @@ namespace ShipModuleScripts.ModuleCrew
                 Functional = !Functional;
                 FunctionalityChange.Invoke();
             }
+        }
+        private void OnDestroy()
+        {
+            _crewRestoreCTS?.Cancel();
         }
     }
 }

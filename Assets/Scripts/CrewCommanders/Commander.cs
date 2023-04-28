@@ -114,7 +114,7 @@ namespace CrewCommanders
         {
             if (_shipModulePlaceTarget.CommanderOnPost != null)
             {
-                _shipModulePlaceTarget.CommanderOnPost.MoveBackToDefaultPosition();
+                _shipModulePlaceTarget.CommanderOnPost.MoveBackToDefaultPosition().Forget();
             }
             _shipModulePlaceOnDuty = _shipModulePlaceTarget;
             _shipModulePlaceOnDuty.SetCommander(this);
@@ -126,7 +126,6 @@ namespace CrewCommanders
             Moving = true;
             float t = 0;
             Vector3 moveTargetPosition = pos + Vector3.back*0.2f;
-            float interpolation = 0;
             Vector3 moveStartPosition = transform.position;
             var direction = moveTargetPosition - moveStartPosition;
             var directionDistance = direction.magnitude;

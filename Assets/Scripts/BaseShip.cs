@@ -1,15 +1,17 @@
-
 using System;
 using Cysharp.Threading.Tasks;
 using DefaultNamespace;
 using InterfaceProviders;
+using ModulesScripts;
 using ShipCharacteristics;
 using ShipModuleScripts.ModuleDurability;
 using UnityEngine;
 
+
 public class BaseShip : MonoBehaviour
 {
-    
+    public Action<ShipEndBattle> EndBattleEvent = delegate(ShipEndBattle battle) { };
+
     [SerializeField]
     private ShipCrewHandler shipCrewHandler;
     [SerializeField]
@@ -30,62 +32,65 @@ public class BaseShip : MonoBehaviour
     private CommanderMoveHandler _commanderMoveHandler;
     [SerializeField]
     private RetreatHandler _retreatHandler;
-    
-
-    [SerializeField]
-    private BaseShip _ememyShip;
     [SerializeField]
     private bool controlledByPlayer;
 
+    private BaseShip _enemyShip;
+    public ShipCrewHandler ShipCrewHandler => shipCrewHandler;
+    public ShipSurvivability ShipSurvivability => shipSurvivability;
+    
     public int ManeuverabilityValue() => _maneuverabilityHandler.Maneuverability;
     public bool CanEvade() => _maneuverabilityHandler.CanEvade();
     public int DetectionValue() => _detectionHandler.Detection; // write detection handler and providers
     public ModulesHandler Modules => _modules;
     public SpeedHandler SpeedHandler => _speedHandler;
     
-    void Start()
-    {
-        Setup().Forget();
-    }
-
-    private async UniTask Setup()
+    
+    public async UniTask Setup()
     {
         await _modules.SetupDecks();
-        
         var durabilitySignal = new DurabilitySignals(_repairSkillHandler);
 
         foreach (var durabilityHandler in _modules.GetDurabilityModuleHandlers())
         {
             durabilityHandler.SetupSignal(durabilitySignal);
         }
-        
+
         SetupManeuverability();
         SetupMedicine();
         SetupRepair();
-        
+
         _speedHandler.Setup(_modules.GetProvidersList<ISpeedProvider>());
         _detectionHandler.Setup(1, _modules.GetProvidersList<IDetectionProvider>());
+
         
-        
-        foreach (var moduleTR in _modules.GetProvidersList<ITargetRequired>())
-        {
-            moduleTR.SetShipTarget(_ememyShip);
-        }
 
         foreach (var moduleSCR in _modules.GetProvidersList<IShipCharacteristicsRequired>())
         {
             moduleSCR.SetCharacteristics(this);
         }
 
+        shipSurvivability.Setup(_modules.GetDurabilityModuleHandlers(), _repairSkillHandler,
+            _modules.GetProvidersList<IRecoverabilityProvider>(), durabilitySignal, () => EndBattleEvent.Invoke(ShipEndBattle.Sinking));
+        shipCrewHandler.Setup(_modules.GetCrewModuleHandlers(), _medicineHandler, () => EndBattleEvent.Invoke(ShipEndBattle.Surrender));
         
-        shipSurvivability.Setup(_modules.GetDurabilityModuleHandlers(), _repairSkillHandler, _modules.GetProvidersList<IRecoverabilityProvider>(), durabilitySignal);
-        shipCrewHandler.Setup(_modules.GetCrewModuleHandlers(), _medicineHandler);
-        _modules.ActivateAllModules();
 
-
-        _retreatHandler.Setup(_speedHandler, _ememyShip.SpeedHandler, controlledByPlayer);
+        //_retreatHandler.Setup(_speedHandler, _enemyShip.SpeedHandler, () => EndBattleEvent.Invoke(ShipEndBattle.Retreat), controlledByPlayer);
         _commanderMoveHandler.ControlledByPlayer(controlledByPlayer);
         Observation(false);
+    }
+
+    public void SetEnemy(BaseShip enemyShip)
+    {
+        _enemyShip = enemyShip;
+        _retreatHandler.Setup(_speedHandler, _enemyShip.SpeedHandler, () => EndBattleEvent.Invoke(ShipEndBattle.Retreat), controlledByPlayer);
+        foreach (var moduleTR in _modules.GetProvidersList<ITargetRequired>())
+        {
+            moduleTR.SetShipTarget(_enemyShip);
+        }
+        
+        _modules.ActivateAllModules();
+        shipSurvivability.OnToggleValueChange(true);
     }
 
     private void SetupManeuverability()
@@ -99,7 +104,7 @@ public class BaseShip : MonoBehaviour
     {
         var quickRecoveryProviderList = _modules.GetProvidersList<IQuickRecoveryProvider>();
         var quickRecoveryProvider = quickRecoveryProviderList.Count > 0 ? quickRecoveryProviderList[0] : null;
-        _medicineHandler.Setup(0,_modules.GetProvidersList<IMedicineProvider>(), quickRecoveryProvider);
+        _medicineHandler.Setup(0, _modules.GetProvidersList<IMedicineProvider>(), quickRecoveryProvider);
     }
 
     private void SetupRepair()
@@ -119,5 +124,11 @@ public class BaseShip : MonoBehaviour
         _modules.EnableHPVisual(value);
     }
 
-    
+    public void FinishBattle()
+    {
+        foreach (var artillery in _modules.GetProvidersList<BaseArtillery>())
+        {
+            artillery.BattleEnd();
+        }
+    }
 }

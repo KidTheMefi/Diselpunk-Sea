@@ -2199,6 +2199,8 @@ MonoBehaviour:
   _armorText: {fileID: 5742945942256118738}
   _armor: 1
   _moduleLocation: 2
+  _baseDurability: 1
+  _baseCrew: 2
 --- !u!1 &1151711884827860567
 GameObject:
   m_ObjectHideFlags: 0
@@ -2750,6 +2752,8 @@ MonoBehaviour:
   _armorText: {fileID: 7647996981013342107}
   _armor: 2
   _moduleLocation: 1
+  _baseDurability: 1
+  _baseCrew: 1
 --- !u!1 &1151711884978015270
 GameObject:
   m_ObjectHideFlags: 0
@@ -2901,6 +2905,8 @@ MonoBehaviour:
   _armorText: {fileID: 5182137742548036073}
   _armor: 1
   _moduleLocation: 0
+  _baseDurability: 1
+  _baseCrew: 1
 --- !u!1 &1151711884998552701
 GameObject:
   m_ObjectHideFlags: 0

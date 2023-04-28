@@ -43,7 +43,6 @@ namespace ShipModuleScripts.ModuleDurability
             _durabilityRestore.onValueChanged.AddListener(ChangeToggle);
             SetupSlider();
         }
-
         
         public void SetupSignal(DurabilitySignals durabilitySignals)
         {
@@ -234,6 +233,11 @@ namespace ShipModuleScripts.ModuleDurability
                 Functional = !Functional;
                 FunctionalityChange.Invoke();
             }
+        }
+
+        private void OnDestroy()
+        {
+            _repairCTS?.Cancel();
         }
     }
 }

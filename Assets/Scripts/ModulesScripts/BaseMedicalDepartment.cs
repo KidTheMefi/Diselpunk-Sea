@@ -26,8 +26,6 @@ namespace ModulesScripts
             string description = $"Medical Department. " +
                 $"+{_medicineSkill} medicine.  " +
                 $"{GetBaseDescription()} ";
-
-            description += IsInOrder ? "" : "Out of order!";
             textMeshProDescription.text = description;
         }
 

@@ -29,7 +29,6 @@ namespace ModulesScripts
             string description = $"{gameObject.name}. " +
                 $"+{_detectionValue} Detection.  " +
                 $"{GetBaseDescription()} ";
-            description += IsInOrder ? "" : "Out of order!"; 
             textMeshProDescription.text = description;
         }
        

@@ -1,4 +1,5 @@
 ﻿using System;
+using DefaultNamespace;
 using ShipModuleScripts.ModuleCrew;
 using TMPro;
 using UnityEngine;
@@ -9,6 +10,7 @@ namespace ShipCharacteristics
 {
     public class ShipCrewHandler : MonoBehaviour
     {
+        public event Action EndBattle;
         [SerializeField]
         private TextMeshPro _textMeshPro;
         [SerializeField]
@@ -16,19 +18,20 @@ namespace ShipCharacteristics
         
         private CrewHandler[] _crewsOnModule;
 
-        private int MaxCrewValue;
-        private int OnDutyCrewValue;
-        private int CurrentReserveCrewValue;
+        public int MaxCrewValue { get; private set; }
+        public int OnDutyCrewValue { get; private set; }
+        public int CurrentReserveCrewValue { get; private set; }
         private int CurrentInjuredCrewValue;
         private int CurrentDeadCrewValue;
-        private int TotalActiveCrew => OnDutyCrewValue + CurrentReserveCrewValue;
+        public int TotalActiveCrew => OnDutyCrewValue + CurrentReserveCrewValue;
 
         private CrewSignals _crewSignals = new CrewSignals();
         private DateTime _startTime;
         private MedicineHandler _medicineHandler;
         
-        public void Setup(CrewHandler[] crews, MedicineHandler medicineHandler)
+        public void Setup(CrewHandler[] crews, MedicineHandler medicineHandler, Action endBattle)
         {
+            EndBattle = endBattle;
             _medicineHandler = medicineHandler;
             _startTime = DateTime.Now;   
             _crewsOnModule = crews;
@@ -117,7 +120,6 @@ namespace ShipCharacteristics
                         CurrentDeadCrewValue++;
                     }
                 }
-                
             }
             
             if (TotalActiveCrew < 0.3f * MaxCrewValue)
@@ -126,12 +128,32 @@ namespace ShipCharacteristics
             }
             UpdateCrewText();
         }
+
+        public void AddNewCrew(int crew)
+        {
+            crew = crew > 0 ? crew : 0;
+
+            var freeSpaceForCrew = MaxCrewValue - TotalActiveCrew;
+            crew = crew > freeSpaceForCrew ? freeSpaceForCrew : crew;
+            CurrentReserveCrewValue += crew;
+            UpdateCrewText();
+        }
+
+        public void RecoverInjuredCrew()
+        {
+            AddNewCrew(CurrentInjuredCrewValue);
+            CurrentInjuredCrewValue = 0;
+            CurrentDeadCrewValue = 0;
+            UpdateCrewText();
+        }
         
 
         private void ShipDestroyed()
         {
             var time = DateTime.Now - _startTime;
             Debug.Log($"Crew Eliminated at: {time.TotalSeconds}");
+            EndBattle?.Invoke();
+            EndBattle = null;
         }
 
         private void UpdateCrewText()

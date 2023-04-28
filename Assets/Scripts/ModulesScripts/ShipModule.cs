@@ -26,7 +26,6 @@ namespace ModulesScripts
 
         public virtual void ClickOn()
         {
-            
         }
         
         public virtual void SetCommanderOnDuty(bool value)
@@ -38,7 +37,8 @@ namespace ModulesScripts
 
         protected string GetBaseDescription()
         {
-           return $"Crew: {MinCrewRequired}/{CrewFull}, Base Durability {MinDurabilityRequired}/{baseDurability}";
+            return "";
+           //return $"Crew: {MinCrewRequired}/{CrewFull}, Base Durability {MinDurabilityRequired}/{baseDurability}";
         }
     }
 }

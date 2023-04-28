@@ -8,7 +8,7 @@ namespace DefaultNamespace
     {
         [SerializeField]
         private TextMeshPro _armorText;
-        [SerializeField]
+        [SerializeField, Range(0, 10)]
         private int _armor;
         [SerializeField]
         private ModuleLocation _moduleLocation;

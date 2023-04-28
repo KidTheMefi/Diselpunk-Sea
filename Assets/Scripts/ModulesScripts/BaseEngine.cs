@@ -33,8 +33,6 @@ namespace ModulesScripts
                 $"+{_maneuverabilityValue} Maneuverability.  " +
                 $"{_speed} speed. " +
                 $"{GetBaseDescription()} ";
-
-            description += IsInOrder ? "" : "Out of order!"; 
             textMeshProDescription.text = description;
         }
         

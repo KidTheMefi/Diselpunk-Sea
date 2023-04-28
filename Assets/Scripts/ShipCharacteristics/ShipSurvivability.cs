@@ -11,6 +11,7 @@ namespace ShipCharacteristics
 {
     public class ShipSurvivability : MonoBehaviour
     {
+        public event Action EndBattle;
         [SerializeField]
         private TextMeshPro _textMeshPro;
         [SerializeField]
@@ -18,16 +19,25 @@ namespace ShipCharacteristics
         private DurabilityHandler[] _modulesDurabilityHandlers;
         [SerializeField]
         private int _recoverabilityValue;
-        private int SurvivabilityValue;
-        private int FullSurvivabilityValue;
+        private int _maxRecoverability;
+        public int SurvivabilityValue { get; private set; }
+        public int FullSurvivabilityValue { get; private set; }
 
         private DurabilitySignals _durabilitySignals;
         private RepairSkillHandler _repairSkillHandle;
 
         private DateTime _startTime;
 
-        public void Setup(DurabilityHandler[] modulesDurability, RepairSkillHandler repairSkillHandler, List<IRecoverabilityProvider> recoverabilityProviders, DurabilitySignals durabilitySignals)
+
+
+        public void Setup(DurabilityHandler[] modulesDurability,
+            RepairSkillHandler repairSkillHandler,
+            List<IRecoverabilityProvider> recoverabilityProviders,
+            DurabilitySignals durabilitySignals,
+            Action endBattle)
         {
+
+            EndBattle = endBattle;
             _startTime = DateTime.Now;
 
             _modulesDurabilityHandlers = modulesDurability;
@@ -39,25 +49,27 @@ namespace ShipCharacteristics
                 _recoverabilityValue += recoverabilityProvider.GetAdditionalRecoverability();
             }
             _durabilitySignals.HaveRecoverabilityPoint(_recoverabilityValue > 0);
-
+            _maxRecoverability = _recoverabilityValue;
             SurvivabilityValue = 0;
             FullSurvivabilityValue = 0;
             foreach (var durabilityHandler in _modulesDurabilityHandlers)
             {
                 FullSurvivabilityValue += durabilityHandler.DurabilityValue.MaxValue;
                 SurvivabilityValue += durabilityHandler.DurabilityValue.CurrentValue;
-               // durabilityHandler.SetupSignal(_durabilitySignals);
+
+                // durabilityHandler.SetupSignal(_durabilitySignals);
             }
 
-            _durabilitySignals.DurabilityDamaged += DurabilitySignalsOnDamaged;
-            _durabilitySignals.RequestRepair += DurabilitySignalsOnDurability;
+            _durabilitySignals.DurabilityDamaged += OnDamagedSignal;
+            _durabilitySignals.RequestRepair += OnRepairRequestSignal;
 
             _toggle.onValueChanged.AddListener(OnToggleValueChange);
             UpdateSurvivabilityText();
 
+
         }
 
-        private void OnToggleValueChange(bool value)
+        public void OnToggleValueChange(bool value)
         {
             foreach (var modules in _modulesDurabilityHandlers)
             {
@@ -65,7 +77,7 @@ namespace ShipCharacteristics
             }
         }
 
-        private void DurabilitySignalsOnDurability(DurabilityHandler crewHandler, int value)
+        private void OnRepairRequestSignal(DurabilityHandler crewHandler, int value)
         {
             if (_recoverabilityValue < 1)
             {
@@ -87,7 +99,7 @@ namespace ShipCharacteristics
             return Random.Range(0, 100) < advancedRepair;
         }
 
-        private void DurabilitySignalsOnDamaged(int value)
+        private void OnDamagedSignal(int value)
         {
             SurvivabilityValue -= value;
             if (SurvivabilityValue < 0.3f * FullSurvivabilityValue)
@@ -100,19 +112,32 @@ namespace ShipCharacteristics
         private void UpdateSurvivabilityText()
         {
             _textMeshPro.text = $"Survivability: {SurvivabilityValue}/{FullSurvivabilityValue}" +
-                $"\nRecoverability: {_recoverabilityValue}";
+                $"\nRecoverability: {_recoverabilityValue}/{_maxRecoverability}";
+        }
+
+        public void AddRecoverability(int value)
+        {
+            value = value > 0 ? value : 0;
+            var possibleRecoverability = _maxRecoverability - _recoverabilityValue;
+            value = value > possibleRecoverability ? possibleRecoverability : value;
+            _recoverabilityValue += value;
+            _durabilitySignals.HaveRecoverabilityPoint(_recoverabilityValue > 0);
+            UpdateSurvivabilityText();
         }
 
         private void ShipDestroyed()
         {
             var time = DateTime.Now - _startTime;
             Debug.Log($"Ship begin sink at: {time.TotalSeconds}");
+            EndBattle?.Invoke();
+            EndBattle = null;
         }
 
         private void OnDestroy()
         {
-            _durabilitySignals.DurabilityDamaged -= DurabilitySignalsOnDamaged;
-            _durabilitySignals.RequestRepair -= DurabilitySignalsOnDurability;
+            EndBattle = null;
+            _durabilitySignals.DurabilityDamaged -= OnDamagedSignal;
+            _durabilitySignals.RequestRepair -= OnRepairRequestSignal;
         }
     }
 }
