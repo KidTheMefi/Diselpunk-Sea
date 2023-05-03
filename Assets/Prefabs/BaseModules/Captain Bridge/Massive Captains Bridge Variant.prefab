@@ -25,7 +25,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6126663673458141084, guid: 69685488a66e99946bb71f079f271326, type: 3}
       propertyPath: _maneuverabilityValue
-      value: 3
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6126663673458141084, guid: 69685488a66e99946bb71f079f271326, type: 3}
       propertyPath: minDurabilityRequired

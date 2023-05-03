@@ -35,14 +35,21 @@ namespace ModulesScripts
         public override void SetCommanderOnDuty(bool value)
         {
             base.SetCommanderOnDuty(value);
+
+            if (_targetShip != null)
+            {
+                _targetShip.Observation(hasCommanderOnDuty&&IsInOrder);
+            }
             
-            _targetShip.Observation(hasCommanderOnDuty&&IsInOrder);
         }
         
         public override void SetActive(bool value)
         {
             IsInOrder = value;
-            _targetShip.Observation(hasCommanderOnDuty&&IsInOrder);
+            if (_targetShip != null)
+            {
+                _targetShip.Observation(hasCommanderOnDuty&&IsInOrder);
+            }
             DetectionChanged?.Invoke();
             UpdateDescription();
         }

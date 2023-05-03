@@ -4170,7 +4170,7 @@ GameObject:
   - component: {fileID: 6979226458031346162}
   - component: {fileID: 6979226458031346163}
   m_Layer: 0
-  m_Name: KruiserShip
+  m_Name: Kruiser Ship
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

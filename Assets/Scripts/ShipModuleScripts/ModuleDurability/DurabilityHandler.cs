@@ -223,7 +223,10 @@ namespace ShipModuleScripts.ModuleDurability
         {
             _damageSpriteRenderer.color = Color.red;
             await UniTask.Delay(TimeSpan.FromSeconds(0.2f));
-            _damageSpriteRenderer.color = _defaultColor;
+            if (_damageSpriteRenderer != null)
+            {
+                _damageSpriteRenderer.color = _defaultColor;
+            }
         }
 
         private void FunctionalityCheck()

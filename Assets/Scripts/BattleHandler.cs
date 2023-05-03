@@ -1,6 +1,7 @@
 using System;
 using Cysharp.Threading.Tasks;
 using DefaultNamespace;
+using LootSettings;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -10,6 +11,8 @@ public class BattleHandler : MonoBehaviour
     private BaseShip _corvettePrefab;
     [SerializeField]
     private BaseShip _frigatePrefab;
+    [SerializeField]
+    private BaseShip _ironcladPrefab;
     [SerializeField]
     private BaseShip _destroyerPrefab;
     [SerializeField]
@@ -21,14 +24,17 @@ public class BattleHandler : MonoBehaviour
     private BaseShip _baseShipEnemy;
     [SerializeField]
     private LootHandler _lootHandler;
-
-    private int lvl;
+    
     private void Start()
     {
-        _lootHandler.LootEnd += () => LootEndAsync().Forget();
-        
-        NextShipAsync().Forget();
+        StartAsync().Forget();
     }
+    private async UniTask StartAsync()
+    {
+        await _baseShipPlayer.Setup();
+        Patrol();
+    }
+    
     
     private void Unsub()
     {
@@ -41,7 +47,8 @@ public class BattleHandler : MonoBehaviour
         switch (end)
         {
             case ShipEndBattle.Retreat:
-                Debug.Log("Enemy ran away");
+                Destroy(_baseShipEnemy.gameObject);
+                Patrol();
                 break;
             case ShipEndBattle.Sinking:
                 LootBegin();
@@ -75,40 +82,38 @@ public class BattleHandler : MonoBehaviour
     private void LootBegin()
     {
         _baseShipPlayer.ShipCrewHandler.RecoverInjuredCrew();
-
-
+        
         AddRecoverability();
         AddCrew();
-        AddShells();
+        AddAllShells();
         
-
-        _lootHandler.ShowLoot(true);
+        Destroy(_baseShipEnemy.gameObject);
+        _lootHandler.BeginSelecting(Patrol);
+        //_lootHandler.ShowMenu(true);
     }
 
     private void AddRecoverability()
     {
         var possibleRecoverability = _baseShipEnemy.ShipSurvivability.SurvivabilityValue + Random.Range(1,6);
-        _lootHandler.AddLootButton(
-            $"Add recoverability {possibleRecoverability}",
-            () =>
-            {
-                _baseShipPlayer.ShipSurvivability.AddRecoverability(possibleRecoverability);
-            });
+        _lootHandler.AddLootButton($"Add recoverability {possibleRecoverability}",
+            () => { _baseShipPlayer.ShipSurvivability.AddRecoverability(possibleRecoverability);  });
     }
 
     private void AddCrew()
     {
         var possibleCrewRecruit = _baseShipEnemy.ShipCrewHandler.OnDutyCrewValue / 2 + Random.Range(1,4);
-        _lootHandler.AddLootButton(
-            $"Add crew {possibleCrewRecruit}",
-            () =>
-            {
-                _baseShipPlayer.ShipCrewHandler.AddNewCrew(possibleCrewRecruit);
-            });
+        _lootHandler.AddLootButton($"Add crew {possibleCrewRecruit}",
+            () => { _baseShipPlayer.ShipCrewHandler.AddNewCrew(possibleCrewRecruit); });
     }
 
-    private void AddShells()
+    private void AddAllShells()
     {
+        RandomShellsLoot randomShellsLoot = new RandomShellsLoot(_baseShipPlayer);
+
+        var action = randomShellsLoot.GetAction();
+        _lootHandler.AddLootButton(randomShellsLoot.GetDescription(), action);
+        
+        /*
         _lootHandler.AddLootButton(
             $"Add 3 of all shell type",
             () =>
@@ -116,35 +121,39 @@ public class BattleHandler : MonoBehaviour
                 _baseShipPlayer.ShellsHandler.AddShell(ShellType.Shrapnel, 3);
                 _baseShipPlayer.ShellsHandler.AddShell(ShellType.ArmorPiercing, 3);
                 _baseShipPlayer.ShellsHandler.AddShell(ShellType.HighExplosive, 3);
-            });
+            });*/
     }
     
-    private async UniTask LootEndAsync()
+    private void Patrol()
     {
-        Destroy(_baseShipEnemy.gameObject);
-        await UniTask.Delay(TimeSpan.FromSeconds(2));
-        NextShipAsync().Forget();
+        var firstShip = GetRandomShip();
+        _lootHandler.AddLootButton($"Approach {firstShip.gameObject.name}",
+            () =>ShipBattle(firstShip).Forget(), false);
+        
+        var secondShip = GetRandomShip();
+        _lootHandler.AddLootButton($"Approach {secondShip.gameObject.name}",
+            () =>ShipBattle(secondShip).Forget(), false);
+
+        _lootHandler.BeginSelecting(null);
     }
 
-    private async UniTask NextShipAsync()
+    private BaseShip GetRandomShip()
     {
-        if (lvl == 0)
-        {
-           await _baseShipPlayer.Setup();
-        }
-        
-        lvl++;
-        int shipNumber = lvl > 4 ? Random.Range(1, 5) : lvl;
-        
+        int shipNumber =  Random.Range(1, 6);
         BaseShip enemyShip = shipNumber switch
         {
             1 => _corvettePrefab,
             2 => _frigatePrefab,
             3 => _destroyerPrefab,
             4 => _kruiserPrefab,
+            5 => _ironcladPrefab,
             _ => _corvettePrefab
         };
+        return enemyShip;
+    }
 
+    private async UniTask ShipBattle(BaseShip enemyShip)
+    {
         _baseShipEnemy = Instantiate(enemyShip, new Vector3(-3,3,0), Quaternion.identity);
         _baseShipPlayer.EndBattleEvent += OnPlayerEndBattleEvent;
         _baseShipEnemy.EndBattleEvent += EnemyEndBattleEvent;
@@ -152,7 +161,4 @@ public class BattleHandler : MonoBehaviour
         _baseShipEnemy.SetEnemy(_baseShipPlayer);
         _baseShipPlayer.SetEnemy(_baseShipEnemy);
     }
-    
-    
-    
 }

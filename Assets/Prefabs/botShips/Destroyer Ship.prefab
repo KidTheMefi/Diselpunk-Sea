@@ -1881,7 +1881,7 @@ GameObject:
   - component: {fileID: 8343137933341679848}
   - component: {fileID: 8343137933341679849}
   m_Layer: 0
-  m_Name: DestroyerShip
+  m_Name: Destroyer Ship
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

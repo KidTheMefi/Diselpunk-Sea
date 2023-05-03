@@ -31,6 +31,7 @@ namespace ModulesScripts
         {
             string description = $"Captains Bridge. " +
                 $"+{_maneuverabilityValue} Maneuverability.  " +
+                $"+{_detectionValue} Detection.  " +
                 $"{GetBaseDescription()} ";
             moduleDescription.SetDescriptionText(description);
         }

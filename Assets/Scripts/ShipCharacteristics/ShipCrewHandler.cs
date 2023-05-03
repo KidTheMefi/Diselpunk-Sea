@@ -38,8 +38,8 @@ namespace ShipCharacteristics
             CurrentInjuredCrewValue = 0;
             CurrentDeadCrewValue = 0;
             OnDutyCrewValue = 0;
-            CurrentReserveCrewValue = 20;
-            MaxCrewValue = CurrentReserveCrewValue;
+            
+            MaxCrewValue = 0;
             
             foreach (var crew in _crewsOnModule)
             {
@@ -47,6 +47,8 @@ namespace ShipCharacteristics
                 OnDutyCrewValue += crew.CrewValue.CurrentValue;
                 crew.SetSignals(_crewSignals);
             }
+            CurrentReserveCrewValue = OnDutyCrewValue/2;
+            MaxCrewValue += CurrentReserveCrewValue;
             
             _crewSignals.CrewMembersDamaged += CrewSignalsOnCrewMembersDamaged;
             _crewSignals.CrewMembersGoToReserve += CrewSignalsOnCrewMembersGoToReserve;

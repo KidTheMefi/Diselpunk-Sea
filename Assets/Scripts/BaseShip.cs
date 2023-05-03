@@ -55,7 +55,7 @@ public class BaseShip : MonoBehaviour
 
         if (_shellsHandler != null)
         {
-            _shellsHandler.SetStartShellValue(3,3,3);
+            _shellsHandler.SetStartShellValue(5,5,5);
         }
         
         var durabilitySignal = new DurabilitySignals(_repairSkillHandler);
@@ -78,8 +78,7 @@ public class BaseShip : MonoBehaviour
             moduleSCR.SetCharacteristics(this);
         }
 
-        shipSurvivability.Setup(_modules.GetDurabilityModuleHandlers(), _repairSkillHandler,
-            _modules.GetProvidersList<IRecoverabilityProvider>(), durabilitySignal, () => EndBattleEvent.Invoke(ShipEndBattle.Sinking));
+        shipSurvivability.Setup(_modules.GetDurabilityModuleHandlers(), _repairSkillHandler, _modules.GetProvidersList<IRecoverabilityProvider>(), durabilitySignal, () => EndBattleEvent.Invoke(ShipEndBattle.Sinking));
         shipCrewHandler.Setup(_modules.GetCrewModuleHandlers(), _medicineHandler, () => EndBattleEvent.Invoke(ShipEndBattle.Surrender));
 
 

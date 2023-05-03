@@ -729,7 +729,7 @@ PrefabInstance:
     - target: {fileID: 9014088241137580413, guid: 89b56b8843c1a824abaecc58e3e728de, type: 3}
       propertyPath: _shipModulePrefab
       value: 
-      objectReference: {fileID: 8613341761687966532, guid: 39a90a37de2b33b4b92df9b6fa437004, type: 3}
+      objectReference: {fileID: 6902490111113625045, guid: 9b59ea518bb7bc94f9431fede1b2fe18, type: 3}
     - target: {fileID: 9014088241427004938, guid: 89b56b8843c1a824abaecc58e3e728de, type: 3}
       propertyPath: _shipModulePrefab
       value: 
@@ -745,7 +745,7 @@ PrefabInstance:
     - target: {fileID: 9014088242284398145, guid: 89b56b8843c1a824abaecc58e3e728de, type: 3}
       propertyPath: _shipModulePrefab
       value: 
-      objectReference: {fileID: 8613341761687966532, guid: 39a90a37de2b33b4b92df9b6fa437004, type: 3}
+      objectReference: {fileID: 4726477890887472139, guid: 54ed3c2eaedf78d499b49621a8030795, type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 89b56b8843c1a824abaecc58e3e728de, type: 3}
 --- !u!1 &130814390
@@ -779,6 +779,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _corvettePrefab: {fileID: 4689100396092502480, guid: 73e7bc3b675bba141b5e8af005299b6e, type: 3}
   _frigatePrefab: {fileID: 27537128312010055, guid: 3219adb2f66834044b503e15255743c3, type: 3}
+  _ironcladPrefab: {fileID: 390251531717727717, guid: 63bdd0a3435ed454fae2e4eed0b83cc9, type: 3}
   _destroyerPrefab: {fileID: 8343137933341679848, guid: 7c86133c81ae8d94cacfa192635b60eb, type: 3}
   _kruiserPrefab: {fileID: 6979226458031346162, guid: b490774ee995009438c47c92baa10ca4, type: 3}
   _baseShipPlayer: {fileID: 679921373}
@@ -832,10 +833,10 @@ RectTransform:
   m_Father: {fileID: 994777594}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -1.8849, y: -0.7792}
-  m_SizeDelta: {x: -13.041, y: -4.5537}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -2.54, y: -0.16}
+  m_SizeDelta: {x: 9, y: 2}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &174552023
 MonoBehaviour:
@@ -915,6 +916,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   backGround: {fileID: 504368270}
   _buttonTextFactory: {fileID: 1419346447}
+  _rectTransform: {fileID: 174552022}
 --- !u!1 &504368270
 GameObject:
   m_ObjectHideFlags: 0

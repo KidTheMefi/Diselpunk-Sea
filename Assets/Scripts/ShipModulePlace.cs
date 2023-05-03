@@ -34,10 +34,8 @@ public class ShipModulePlace : MonoBehaviour
     public Commander CommanderOnPost => _commanderOnPost;
     private ShipPlaceSignal _shipPlaceSignal;
 
-    private void Awake()
+    private void Awake() 
     {
-        
-
         if (_shipModulePrefab != null)
         {
             _shipModule = Instantiate(_shipModulePrefab, transform);
