@@ -45,11 +45,11 @@ namespace DefaultNamespace
             await UniTask.Yield();
         }
 
-        public void EnableHPVisual(bool value)
+        public void EnableHpVisual(bool value)
         {
             foreach (var places in modulesPlaces)
             {
-                places.HPVisible(value);
+                places.InformationVisible(value);
             }
         }
 

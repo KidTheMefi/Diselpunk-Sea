@@ -23,7 +23,7 @@ namespace ModulesScripts
             string description = $"Engineering Department. " +
                 $"+{_repaireSkillValue} repair.  " +
                 $"{GetBaseDescription()} ";
-            textMeshProDescription.text = description;
+            moduleDescription.SetDescriptionText(description);
         }
 
         public override void SetActive(bool value)

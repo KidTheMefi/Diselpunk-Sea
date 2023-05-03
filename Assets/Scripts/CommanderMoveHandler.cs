@@ -36,7 +36,11 @@ namespace DefaultNamespace
         {
             foreach (var commander in _shipCommanders)
             {
-                commander.gameObject.SetActive(value);
+                if (commander != null)
+                {
+                    commander.gameObject.SetActive(value);
+                }
+                
             }
         }
         

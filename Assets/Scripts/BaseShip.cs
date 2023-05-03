@@ -33,22 +33,31 @@ public class BaseShip : MonoBehaviour
     [SerializeField]
     private RetreatHandler _retreatHandler;
     [SerializeField]
+    private ShellsHandler _shellsHandler;
+    [SerializeField]
     private bool controlledByPlayer;
 
     private BaseShip _enemyShip;
     public ShipCrewHandler ShipCrewHandler => shipCrewHandler;
     public ShipSurvivability ShipSurvivability => shipSurvivability;
-    
+
     public int ManeuverabilityValue() => _maneuverabilityHandler.Maneuverability;
     public bool CanEvade() => _maneuverabilityHandler.CanEvade();
     public int DetectionValue() => _detectionHandler.Detection; // write detection handler and providers
     public ModulesHandler Modules => _modules;
     public SpeedHandler SpeedHandler => _speedHandler;
-    
-    
+    public ShellsHandler ShellsHandler => _shellsHandler;
+
+
     public async UniTask Setup()
     {
         await _modules.SetupDecks();
+
+        if (_shellsHandler != null)
+        {
+            _shellsHandler.SetStartShellValue(3,3,3);
+        }
+        
         var durabilitySignal = new DurabilitySignals(_repairSkillHandler);
 
         foreach (var durabilityHandler in _modules.GetDurabilityModuleHandlers())
@@ -63,7 +72,6 @@ public class BaseShip : MonoBehaviour
         _speedHandler.Setup(_modules.GetProvidersList<ISpeedProvider>());
         _detectionHandler.Setup(1, _modules.GetProvidersList<IDetectionProvider>());
 
-        
 
         foreach (var moduleSCR in _modules.GetProvidersList<IShipCharacteristicsRequired>())
         {
@@ -73,9 +81,9 @@ public class BaseShip : MonoBehaviour
         shipSurvivability.Setup(_modules.GetDurabilityModuleHandlers(), _repairSkillHandler,
             _modules.GetProvidersList<IRecoverabilityProvider>(), durabilitySignal, () => EndBattleEvent.Invoke(ShipEndBattle.Sinking));
         shipCrewHandler.Setup(_modules.GetCrewModuleHandlers(), _medicineHandler, () => EndBattleEvent.Invoke(ShipEndBattle.Surrender));
-        
 
-        //_retreatHandler.Setup(_speedHandler, _enemyShip.SpeedHandler, () => EndBattleEvent.Invoke(ShipEndBattle.Retreat), controlledByPlayer);
+
+//        _retreatHandler.Setup(_speedHandler, _enemyShip.SpeedHandler, () => EndBattleEvent.Invoke(ShipEndBattle.Retreat), controlledByPlayer);
         _commanderMoveHandler.ControlledByPlayer(controlledByPlayer);
         Observation(false);
     }
@@ -88,7 +96,7 @@ public class BaseShip : MonoBehaviour
         {
             moduleTR.SetShipTarget(_enemyShip);
         }
-        
+
         _modules.ActivateAllModules();
         shipSurvivability.OnToggleValueChange(true);
     }
@@ -121,7 +129,7 @@ public class BaseShip : MonoBehaviour
             return;
         }
         _commanderMoveHandler.ShowCommanders(value);
-        _modules.EnableHPVisual(value);
+        _modules.EnableHpVisual(value);
     }
 
     public void FinishBattle()

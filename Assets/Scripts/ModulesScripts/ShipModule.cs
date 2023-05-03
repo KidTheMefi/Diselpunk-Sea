@@ -14,7 +14,7 @@ namespace ModulesScripts
         [SerializeField, Range(0, 25)]
         private int minDurabilityRequired;
         [SerializeField]
-        protected TextMeshPro textMeshProDescription;
+        protected ModuleDescription moduleDescription;
         protected bool hasCommanderOnDuty = false;
         
         public int MinCrewRequired => minCrewRequired > crewFull ? crewFull : minCrewRequired;
@@ -39,6 +39,11 @@ namespace ModulesScripts
         {
             return "";
            //return $"Crew: {MinCrewRequired}/{CrewFull}, Base Durability {MinDurabilityRequired}/{baseDurability}";
+        }
+
+        public void ShowDescription(bool value)
+        {
+            moduleDescription.gameObject.SetActive(value);
         }
     }
 }

@@ -9,9 +9,9 @@ public class Fire : MonoBehaviour
     private CancellationTokenSource _cancellationTokenSource;
     private ShipModulePlace _shipModulePlace ;
     [SerializeField]
-    private Slider _slider;
-    [SerializeField]
     private SpriteRenderer _fireRenderer;
+    [SerializeField]
+    private SpriteRenderer _fireLevelSpriteRenderer;
 
     private int _fireLvl;
     private bool _isOnFire = false;
@@ -23,6 +23,13 @@ public class Fire : MonoBehaviour
         gameObject.SetActive(false);
         _shipModulePlace = shipModulePlace;
     }
+
+
+    private void ShowFireLevel(int lvl)
+    {
+        _fireLevelSpriteRenderer.size = new Vector2(_fireLevelSpriteRenderer.size.x, 0.5f + lvl * 2.5f / 100);
+    }
+    
     
     public void AddFire(int fireLvl)
     {
@@ -40,7 +47,7 @@ public class Fire : MonoBehaviour
             _cancellationTokenSource = new CancellationTokenSource();
             OnFireAsync(_cancellationTokenSource.Token).Forget();
         }
-        _slider.value = _fireLvl;
+        ShowFireLevel(_fireLvl);
     }
 
     private async UniTask OnFireAsync(CancellationToken token)
@@ -80,7 +87,7 @@ public class Fire : MonoBehaviour
         int fireChangeValue = 0;
         fireChangeValue -= _shipModulePlace.GetFireExtinguishing();
         _fireLvl += fireChangeValue;
-        _slider.value = _fireLvl;
+        ShowFireLevel(_fireLvl);
         if (_fireLvl <= 0)
         {
             FireEnd();

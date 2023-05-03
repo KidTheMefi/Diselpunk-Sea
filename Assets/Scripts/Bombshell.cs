@@ -38,7 +38,7 @@ namespace DefaultNamespace
             {
                 ShellType.Common => Color.white,
                 ShellType.Shrapnel => Color.grey,
-                ShellType.ArmourPiercing => Color.cyan,
+                ShellType.ArmorPiercing => Color.cyan,
                 ShellType.HighExplosive => Color.yellow,
                 _ => main.startColor
             };
@@ -114,7 +114,7 @@ namespace DefaultNamespace
                 case ShellType.Common:
                     CommonContact();
                     return;
-                case ShellType.ArmourPiercing:
+                case ShellType.ArmorPiercing:
                     ArmourPiercingContact();
                     return;
                 case ShellType.HighExplosive:

@@ -33,7 +33,7 @@ namespace ModulesScripts
                 $"+{_maneuverabilityValue} Maneuverability.  " +
                 $"{_speed} speed. " +
                 $"{GetBaseDescription()} ";
-            textMeshProDescription.text = description;
+            moduleDescription.SetDescriptionText(description);
         }
         
         public int GetManeuverability()

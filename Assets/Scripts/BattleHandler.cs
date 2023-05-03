@@ -76,24 +76,49 @@ public class BattleHandler : MonoBehaviour
     {
         _baseShipPlayer.ShipCrewHandler.RecoverInjuredCrew();
 
+
+        AddRecoverability();
+        AddCrew();
+        AddShells();
+        
+
+        _lootHandler.ShowLoot(true);
+    }
+
+    private void AddRecoverability()
+    {
+        var possibleRecoverability = _baseShipEnemy.ShipSurvivability.SurvivabilityValue + Random.Range(1,6);
         _lootHandler.AddLootButton(
-            $"Add recoverability {_baseShipEnemy.ShipSurvivability.SurvivabilityValue}",
+            $"Add recoverability {possibleRecoverability}",
             () =>
             {
-                _baseShipPlayer.ShipSurvivability.AddRecoverability(_baseShipEnemy.ShipSurvivability.SurvivabilityValue);
+                _baseShipPlayer.ShipSurvivability.AddRecoverability(possibleRecoverability);
             });
+    }
 
-        var possibleCrewRecruit = _baseShipEnemy.ShipCrewHandler.OnDutyCrewValue / 2;
+    private void AddCrew()
+    {
+        var possibleCrewRecruit = _baseShipEnemy.ShipCrewHandler.OnDutyCrewValue / 2 + Random.Range(1,4);
         _lootHandler.AddLootButton(
             $"Add crew {possibleCrewRecruit}",
             () =>
             {
                 _baseShipPlayer.ShipCrewHandler.AddNewCrew(possibleCrewRecruit);
             });
-
-        _lootHandler.ShowLoot(true);
     }
 
+    private void AddShells()
+    {
+        _lootHandler.AddLootButton(
+            $"Add 3 of all shell type",
+            () =>
+            {
+                _baseShipPlayer.ShellsHandler.AddShell(ShellType.Shrapnel, 3);
+                _baseShipPlayer.ShellsHandler.AddShell(ShellType.ArmorPiercing, 3);
+                _baseShipPlayer.ShellsHandler.AddShell(ShellType.HighExplosive, 3);
+            });
+    }
+    
     private async UniTask LootEndAsync()
     {
         Destroy(_baseShipEnemy.gameObject);

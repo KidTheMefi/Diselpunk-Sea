@@ -29,7 +29,7 @@ namespace ModulesScripts
             string description = $"{gameObject.name}. " +
                 $"+{_detectionValue} Detection.  " +
                 $"{GetBaseDescription()} ";
-            textMeshProDescription.text = description;
+            moduleDescription.SetDescriptionText(description);
         }
        
         public override void SetCommanderOnDuty(bool value)

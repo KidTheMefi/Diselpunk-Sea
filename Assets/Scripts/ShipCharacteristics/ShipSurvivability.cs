@@ -52,12 +52,11 @@ namespace ShipCharacteristics
             _maxRecoverability = _recoverabilityValue;
             SurvivabilityValue = 0;
             FullSurvivabilityValue = 0;
+            
             foreach (var durabilityHandler in _modulesDurabilityHandlers)
             {
                 FullSurvivabilityValue += durabilityHandler.DurabilityValue.MaxValue;
                 SurvivabilityValue += durabilityHandler.DurabilityValue.CurrentValue;
-
-                // durabilityHandler.SetupSignal(_durabilitySignals);
             }
 
             _durabilitySignals.DurabilityDamaged += OnDamagedSignal;

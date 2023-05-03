@@ -41,7 +41,7 @@ public class ShipModulePlace : MonoBehaviour
         if (_shipModulePrefab != null)
         {
             _shipModule = Instantiate(_shipModulePrefab, transform);
-            _shipModule.transform.localPosition = Vector3.zero;
+            _shipModule.transform.localPosition = Vector3.back*0.5f;
         }
 
         _fire.Setup(this);
@@ -155,10 +155,16 @@ public class ShipModulePlace : MonoBehaviour
         return false;
     }
 
-    public void HPVisible(bool value)
+    public void InformationVisible(bool value)
     {
         _durabilityHandler.gameObject.SetActive(value);
         _crewHandler.gameObject.SetActive(value);
+
+        if (_shipModule != null)
+        {
+            _shipModule.ShowDescription(value);
+        }
+        
     }
     private void OnMouseDown()
     {

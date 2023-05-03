@@ -32,7 +32,7 @@ namespace ModulesScripts
             string description = $"Captains Bridge. " +
                 $"+{_maneuverabilityValue} Maneuverability.  " +
                 $"{GetBaseDescription()} ";
-            textMeshProDescription.text = description;
+            moduleDescription.SetDescriptionText(description);
         }
         
         public int GetManeuverability()

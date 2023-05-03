@@ -48,7 +48,7 @@ MonoBehaviour:
   baseDurability: 2
   minCrewRequired: 1
   minDurabilityRequired: 1
-  textMeshProDescription: {fileID: 3808026444842632812}
+  moduleDescription: {fileID: 7850252312855883664}
   _detectionValue: 3
 --- !u!1001 &1073483211096524332
 PrefabInstance:
@@ -107,7 +107,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9175025862633780586, guid: 54017ea2d7900934da68240684d00132, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 54017ea2d7900934da68240684d00132, type: 3}
@@ -116,14 +116,14 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 3358762826074377092, guid: 54017ea2d7900934da68240684d00132, type: 3}
   m_PrefabInstance: {fileID: 1073483211096524332}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &3808026444842632812 stripped
+--- !u!114 &7850252312855883664 stripped
 MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4196533151543230528, guid: 54017ea2d7900934da68240684d00132, type: 3}
+  m_CorrespondingSourceObject: {fileID: 7067403080290511292, guid: 54017ea2d7900934da68240684d00132, type: 3}
   m_PrefabInstance: {fileID: 1073483211096524332}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9541d86e2fd84c1d9990edf0852d74ab, type: 3}
+  m_Script: {fileID: 11500000, guid: c642e0fb2fb9d3849a750dfe87ae4d83, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 

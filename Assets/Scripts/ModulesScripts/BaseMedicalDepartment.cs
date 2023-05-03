@@ -26,7 +26,7 @@ namespace ModulesScripts
             string description = $"Medical Department. " +
                 $"+{_medicineSkill} medicine.  " +
                 $"{GetBaseDescription()} ";
-            textMeshProDescription.text = description;
+            moduleDescription.SetDescriptionText(description);
         }
 
         public override void SetActive(bool value)

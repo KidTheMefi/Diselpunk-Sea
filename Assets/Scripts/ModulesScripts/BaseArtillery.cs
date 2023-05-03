@@ -18,24 +18,19 @@ namespace ModulesScripts
         [SerializeField, Range(0.5f, 15f)]
         private float _aiming;
         [SerializeField]
-        private Shell _shell;
+        protected Shell _shell;
         [SerializeField]
         private LineRenderer _lineToTargetRenderer;
         [SerializeField]
         private SpriteRenderer _sightSpriteRenderer;
 
         private BaseShip _shipTarget;
-        private BaseShip _thisShip;
+        protected BaseShip _thisShip;
         private bool _waitingForTarget;
         private bool _inBattle;
         private CancellationTokenSource _fireCTS;
         private ShipModulePlace _targetPlace;
-
-        private void Start()
-        {
-            UpdateDescription();
-        }
-
+        
         public void SetShipTarget(BaseShip targetShip)
         {
             _shipTarget = targetShip;
@@ -103,10 +98,10 @@ namespace ModulesScripts
         }
 
 
-        private async UniTask ReloadAsync(CancellationToken token)
+        protected virtual async UniTask ReloadAsync(CancellationToken token)
         {
             //_fireCTS = new CancellationTokenSource();
-
+            UpdateDescription();
             await TimerAsync("Reload", _reloadTime, token);
             if (!token.IsCancellationRequested)
             {
@@ -126,16 +121,10 @@ namespace ModulesScripts
             }
         }
 
-        private async UniTask Fire(CancellationToken token)
+        protected virtual async UniTask Fire(CancellationToken token)
         {
             var targetModule = _targetPlace == null ? _shipTarget.Modules.GetRandomModule() : _targetPlace;
-
-            //
-
-            ArtilleryVolleyFactory.Instance.FireBombshell(_shell, targetModule, transform.position, WillMiss());
-
-            /*await UniTask.Delay(TimeSpan.FromSeconds(0.1f));
-            ArtilleryVolleyFactory.Instance.FireBombshell(_baseDamage, targetModule, transform.position);*/
+            ArtilleryVolleyFactory.Instance.FireBombshell(GetShell(), targetModule, transform.position, WillMiss());
 
             _timerText.color = new Color(1f, 0.5f, 0f, 1);
             _timerText.text = "FIRE!";
@@ -152,12 +141,11 @@ namespace ModulesScripts
         {
             var rand = Random.Range(0, 20);
             bool miss = _shipTarget.CanEvade() && rand < _shipTarget.ManeuverabilityValue();
-
             //Debug.Log($"CanEvade({_shipTarget.CanEvade()}). {rand}/{_shipTarget.ManeuverabilityValue()} = {miss}");
             return miss;
         }
 
-        private async UniTask TimerAsync(string timerName, float time, CancellationToken token)
+        protected async UniTask TimerAsync(string timerName, float time, CancellationToken token)
         {
             time = time < 0 ? 0 : time;
 
@@ -181,12 +169,14 @@ namespace ModulesScripts
 
         private void UpdateDescription()
         {
-            string description = $"Artillery. " +
-                $"{_shell.BaseDamage} Damage.  " +
-                $"{_shell.ShellType}.  " +
+            string description = $"Artillery. \n" +
+                $"{GetShell().BaseDamage} Damage.  " +
+                $"{GetShell().BaseCrewDamage} Crew damage.  " +
+                $"{GetShell().ArmorPiercingClass} AP class.  " +
+                $"{GetShell().ShellType}.  " +
                 $"{_reloadTime}+{_aiming} min shoot Time. " /*+
                 $"{GetBaseDescription()} "*/;
-            textMeshProDescription.text = description;
+            moduleDescription.SetDescriptionText(description);
         }
 
         public override void SetActive(bool value)
@@ -211,6 +201,11 @@ namespace ModulesScripts
                 _fireCTS?.Cancel();
                 _timerText.text = "out of order";
             }
+        }
+
+        protected virtual Shell GetShell()
+        {
+            return _shell;
         }
 
         public void BattleEnd()

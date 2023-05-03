@@ -20,6 +20,10 @@ PrefabInstance:
       value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 6987425497372867216, guid: 5fce0ea6e878e3b43aef492b6c2c67a3, type: 3}
+      propertyPath: moduleDescription
+      value: 
+      objectReference: {fileID: 9072933580786352564}
+    - target: {fileID: 6987425497372867216, guid: 5fce0ea6e878e3b43aef492b6c2c67a3, type: 3}
       propertyPath: minDurabilityRequired
       value: 4
       objectReference: {fileID: 0}
@@ -69,3 +73,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5fce0ea6e878e3b43aef492b6c2c67a3, type: 3}
+--- !u!114 &9072933580786352564 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4286326637198919301, guid: 5fce0ea6e878e3b43aef492b6c2c67a3, type: 3}
+  m_PrefabInstance: {fileID: 5086145457813620529}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c642e0fb2fb9d3849a750dfe87ae4d83, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
