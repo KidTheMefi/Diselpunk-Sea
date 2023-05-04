@@ -81,7 +81,7 @@ namespace DefaultNamespace
                 return;
             };
             _shellObject.SetActive(false);
-            if (miss)
+            if (miss || _target == null)
             {
                 ShowTextAsync("Miss").Forget();
                 return;

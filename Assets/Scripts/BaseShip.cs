@@ -100,6 +100,23 @@ public class BaseShip : MonoBehaviour
         shipSurvivability.OnToggleValueChange(true);
     }
 
+    public void UpgradeDeckDurability(ModuleLocation moduleLocation)
+    {
+        _modules.UpgradeDeckDurability(moduleLocation);
+        shipSurvivability.UpdateSurvivability();
+    }
+    
+    public void UpgradeDeckCrew(ModuleLocation moduleLocation)
+    {
+        _modules.UpgradeDeckCrew(moduleLocation);
+        shipCrewHandler.UpdateCrew();
+    }
+    
+    public void UpgradeDeckArmor(ModuleLocation moduleLocation)
+    {
+        _modules.UpgradeDeckArmor(moduleLocation);
+    }
+    
     private void SetupManeuverability()
     {
         var evasionProviderList = _modules.GetProvidersList<IEvasionProvider>();
@@ -137,5 +154,10 @@ public class BaseShip : MonoBehaviour
         {
             artillery.BattleEnd();
         }
+    }
+
+    public void Destroy()
+    {
+        Destroy(gameObject);
     }
 }

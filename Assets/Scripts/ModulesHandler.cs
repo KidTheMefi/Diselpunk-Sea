@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using ShipModuleScripts.ModuleCrew;
 using ShipModuleScripts.ModuleDurability;
@@ -28,8 +29,38 @@ namespace DefaultNamespace
         private Deck _mainDeck;
         [SerializeField]
         private Deck _deckHouse;
-        
 
+
+        public void UpgradeDeckDurability(ModuleLocation moduleLocation)
+        {
+            var deck = GetDeck(moduleLocation);
+            deck.UpgradeDurability();
+        }
+        
+        public void UpgradeDeckCrew(ModuleLocation moduleLocation)
+        {
+            var deck = GetDeck(moduleLocation);
+            deck.UpgradeCrew();
+        }
+        
+        public void UpgradeDeckArmor(ModuleLocation moduleLocation)
+        {
+            var deck = GetDeck(moduleLocation);
+            deck.UpgradeArmor();
+        }
+
+        private Deck GetDeck(ModuleLocation moduleLocation)
+        {
+            Deck deck = moduleLocation switch
+            {
+                ModuleLocation.DeckHouse => _deckHouse,
+                ModuleLocation.LowerDeck => _lowerDeck,
+                ModuleLocation.MainDeck => _mainDeck,
+                _ => throw new ArgumentOutOfRangeException(nameof(moduleLocation), moduleLocation, null)
+            };
+            return deck;
+        }
+        
         public async UniTask SetupDecks()
         {
             _lowerDeck.SetupDeck(_shipPlaceSignal);

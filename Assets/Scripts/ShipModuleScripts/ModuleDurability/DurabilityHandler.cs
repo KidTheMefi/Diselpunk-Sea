@@ -182,12 +182,16 @@ namespace ShipModuleScripts.ModuleDurability
 
         private void UpdateVisualView()
         {
+            if (gameObject == null)
+            {
+                return;
+            }
+            
             _textMeshPro.text = $" {_durabilityValue.CurrentValue}/{_durabilityValue.MaxValue} ";
             _textMeshPro.text += Functional ? "" : "Out of order! ";
             _textMeshPro.text += _enoughCrewForRepair ? "" : "Сan't be repair ";
             _textMeshPro.color = _enoughCrewForRepair ? Color.white : new Color(1f, 0.4f, 0, 1);
             _textMeshPro.color = Functional ? _textMeshPro.color : Color.red;
-            
             
             if (!Functional || !_enoughCrewForRepair)
             {

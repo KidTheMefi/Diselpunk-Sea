@@ -36,12 +36,10 @@ namespace ShipCharacteristics
             DurabilitySignals durabilitySignals,
             Action endBattle)
         {
-
             EndBattle = endBattle;
             _startTime = DateTime.Now;
-
+            
             _modulesDurabilityHandlers = modulesDurability;
-
             _durabilitySignals = durabilitySignals;
             _repairSkillHandle = repairSkillHandler;
             foreach (var recoverabilityProvider in recoverabilityProviders)
@@ -50,6 +48,20 @@ namespace ShipCharacteristics
             }
             _durabilitySignals.HaveRecoverabilityPoint(_recoverabilityValue > 0);
             _maxRecoverability = _recoverabilityValue;
+            
+            UpdateSurvivability();
+            
+            _durabilitySignals.DurabilityDamaged += OnDamagedSignal;
+            _durabilitySignals.RequestRepair += OnRepairRequestSignal;
+
+            _toggle.onValueChanged.AddListener(OnToggleValueChange);
+            UpdateSurvivabilityText();
+
+
+        }
+
+        public void UpdateSurvivability()
+        {
             SurvivabilityValue = 0;
             FullSurvivabilityValue = 0;
             
@@ -58,14 +70,7 @@ namespace ShipCharacteristics
                 FullSurvivabilityValue += durabilityHandler.DurabilityValue.MaxValue;
                 SurvivabilityValue += durabilityHandler.DurabilityValue.CurrentValue;
             }
-
-            _durabilitySignals.DurabilityDamaged += OnDamagedSignal;
-            _durabilitySignals.RequestRepair += OnRepairRequestSignal;
-
-            _toggle.onValueChanged.AddListener(OnToggleValueChange);
             UpdateSurvivabilityText();
-
-
         }
 
         public void OnToggleValueChange(bool value)

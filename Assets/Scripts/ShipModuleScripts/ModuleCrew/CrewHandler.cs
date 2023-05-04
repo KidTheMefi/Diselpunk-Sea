@@ -38,6 +38,7 @@ namespace ShipModuleScripts.ModuleCrew
             _crewValue = crewValue;
             _defaultColor = _damageSpriteRenderer.color;
             _crewRestore.onValueChanged.AddListener(CrewChangeRestore);
+            SetupSlider();
         }
         
         public void SetSignals(CrewSignals crewSignals)

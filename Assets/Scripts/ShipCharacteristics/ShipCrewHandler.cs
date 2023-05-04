@@ -1,5 +1,4 @@
 ﻿using System;
-using DefaultNamespace;
 using ShipModuleScripts.ModuleCrew;
 using TMPro;
 using UnityEngine;
@@ -35,25 +34,36 @@ namespace ShipCharacteristics
             _medicineHandler = medicineHandler;
             _startTime = DateTime.Now;   
             _crewsOnModule = crews;
+
+            UpdateCrew();
+            
+            foreach (var crew in _crewsOnModule)
+            {
+                crew.SetSignals(_crewSignals);
+            }
+            
+            
+            _crewSignals.CrewMembersDamaged += CrewSignalsOnCrewMembersDamaged;
+            _crewSignals.CrewMembersGoToReserve += CrewSignalsOnCrewMembersGoToReserve;
+            _crewSignals.RequestCrewMembersFromReserve += RequestCrewSignalsOnRequestCrewMembersFromReserve;
+            _toggle.onValueChanged.AddListener(OnToggleValueChange);
+            UpdateCrewText();
+        }
+
+        public void UpdateCrew()
+        {
             CurrentInjuredCrewValue = 0;
             CurrentDeadCrewValue = 0;
             OnDutyCrewValue = 0;
-            
             MaxCrewValue = 0;
             
             foreach (var crew in _crewsOnModule)
             {
                 MaxCrewValue += crew.CrewValue.MaxValue;
                 OnDutyCrewValue += crew.CrewValue.CurrentValue;
-                crew.SetSignals(_crewSignals);
             }
             CurrentReserveCrewValue = OnDutyCrewValue/2;
             MaxCrewValue += CurrentReserveCrewValue;
-            
-            _crewSignals.CrewMembersDamaged += CrewSignalsOnCrewMembersDamaged;
-            _crewSignals.CrewMembersGoToReserve += CrewSignalsOnCrewMembersGoToReserve;
-            _crewSignals.RequestCrewMembersFromReserve += RequestCrewSignalsOnRequestCrewMembersFromReserve;
-            _toggle.onValueChanged.AddListener(OnToggleValueChange);
             UpdateCrewText();
         }
 

@@ -40,8 +40,38 @@ namespace DefaultNamespace
         
         private void SetupPlace(ShipModulePlace shipModulePlace, ShipPlaceSignal shipPlaceSignal)
         {
-            
-            shipModulePlace.Setup(_baseDurability, _baseCrew, _armor, _moduleLocation, shipPlaceSignal);
+            shipModulePlace.UpdateDurability(_baseDurability);
+            shipModulePlace.UpdateCrew(_baseCrew);
+            shipModulePlace.UpdateArmor(_armor);
+            shipModulePlace.Setup(_moduleLocation, shipPlaceSignal);
+        }
+
+        public void UpgradeDurability()
+        {
+            _baseDurability++;
+            foreach (var place in DeckPlaces)
+            {
+                place.UpdateDurability(_baseDurability);
+            }
+        }
+        
+        public void UpgradeCrew()
+        {
+            _baseCrew++;
+            foreach (var place in DeckPlaces)
+            {
+                place.UpdateCrew(_baseCrew);;
+            }
+        }
+
+        public void UpgradeArmor()
+        {
+            _armor++;
+            SetArmorValueText(_armor);
+            foreach (var place in DeckPlaces)
+            {
+                place.UpdateArmor(_armor);
+            }
         }
     }
 }

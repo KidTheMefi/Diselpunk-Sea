@@ -23,12 +23,27 @@ public class BattleHandler : MonoBehaviour
     [SerializeField]
     private BaseShip _baseShipEnemy;
     [SerializeField]
-    private LootHandler _lootHandler;
+    private MenuButtons _menuButtons;
+
+    private Shipyard _shipyard;
+    private LootAfterBattle _lootAfterBattle;
     
     private void Start()
     {
+        _shipyard = new Shipyard(_baseShipPlayer, _menuButtons);
+        _lootAfterBattle = new LootAfterBattle(_baseShipPlayer, _menuButtons);
+        _shipyard.LeaveShipYard += ShipyardOnLeaveShipYard;
+        _lootAfterBattle.LeaveLoot += Patrol;
         StartAsync().Forget();
     }
+    
+    
+    
+    private void ShipyardOnLeaveShipYard()
+    {
+        Patrol();
+    }
+    
     private async UniTask StartAsync()
     {
         await _baseShipPlayer.Setup();
@@ -58,16 +73,24 @@ public class BattleHandler : MonoBehaviour
                 break;
         }
     }
+
+    private void LootBegin()
+    {
+        _lootAfterBattle.SetShipToLoot(_baseShipEnemy);
+        _lootAfterBattle.LootBegin();
+    }
+    
     private void OnPlayerEndBattleEvent(ShipEndBattle end)
     {
         FinishBattle();
         if (end == ShipEndBattle.Retreat)
         {
-            Debug.Log("You ran away");
+            Destroy(_baseShipEnemy.gameObject);
+            Patrol();
         }
         else
         {
-            Debug.Log("game over");
+            Debug.Log("GameOver");
         }
     }
 
@@ -78,65 +101,8 @@ public class BattleHandler : MonoBehaviour
         _baseShipPlayer.FinishBattle();
         _baseShipEnemy.FinishBattle();
     }
-
-    private void LootBegin()
-    {
-        _baseShipPlayer.ShipCrewHandler.RecoverInjuredCrew();
-        
-        AddRecoverability();
-        AddCrew();
-        AddAllShells();
-        
-        Destroy(_baseShipEnemy.gameObject);
-        _lootHandler.BeginSelecting(Patrol);
-        //_lootHandler.ShowMenu(true);
-    }
-
-    private void AddRecoverability()
-    {
-        var possibleRecoverability = _baseShipEnemy.ShipSurvivability.SurvivabilityValue + Random.Range(1,6);
-        _lootHandler.AddLootButton($"Add recoverability {possibleRecoverability}",
-            () => { _baseShipPlayer.ShipSurvivability.AddRecoverability(possibleRecoverability);  });
-    }
-
-    private void AddCrew()
-    {
-        var possibleCrewRecruit = _baseShipEnemy.ShipCrewHandler.OnDutyCrewValue / 2 + Random.Range(1,4);
-        _lootHandler.AddLootButton($"Add crew {possibleCrewRecruit}",
-            () => { _baseShipPlayer.ShipCrewHandler.AddNewCrew(possibleCrewRecruit); });
-    }
-
-    private void AddAllShells()
-    {
-        RandomShellsLoot randomShellsLoot = new RandomShellsLoot(_baseShipPlayer);
-
-        var action = randomShellsLoot.GetAction();
-        _lootHandler.AddLootButton(randomShellsLoot.GetDescription(), action);
-        
-        /*
-        _lootHandler.AddLootButton(
-            $"Add 3 of all shell type",
-            () =>
-            {
-                _baseShipPlayer.ShellsHandler.AddShell(ShellType.Shrapnel, 3);
-                _baseShipPlayer.ShellsHandler.AddShell(ShellType.ArmorPiercing, 3);
-                _baseShipPlayer.ShellsHandler.AddShell(ShellType.HighExplosive, 3);
-            });*/
-    }
     
-    private void Patrol()
-    {
-        var firstShip = GetRandomShip();
-        _lootHandler.AddLootButton($"Approach {firstShip.gameObject.name}",
-            () =>ShipBattle(firstShip).Forget(), false);
-        
-        var secondShip = GetRandomShip();
-        _lootHandler.AddLootButton($"Approach {secondShip.gameObject.name}",
-            () =>ShipBattle(secondShip).Forget(), false);
-
-        _lootHandler.BeginSelecting(null);
-    }
-
+    
     private BaseShip GetRandomShip()
     {
         int shipNumber =  Random.Range(1, 6);
@@ -152,6 +118,22 @@ public class BattleHandler : MonoBehaviour
         return enemyShip;
     }
 
+    private void Patrol()
+    {
+        var firstShip = GetRandomShip();
+        _menuButtons.AddLootButton($"Approach {firstShip.gameObject.name}", () =>ShipBattle(firstShip).Forget());
+        
+        var secondShip = GetRandomShip();
+        _menuButtons.AddLootButton($"Approach {secondShip.gameObject.name}", () =>ShipBattle(secondShip).Forget());
+
+
+        if (Random.Range(0,100)< 20)
+        {
+            _menuButtons.AddLootButton($"Back to shipyard", _shipyard.ShowShipOptionsShipyard);
+        }
+        _menuButtons.BeginSelecting(null);
+    }
+    
     private async UniTask ShipBattle(BaseShip enemyShip)
     {
         _baseShipEnemy = Instantiate(enemyShip, new Vector3(-3,3,0), Quaternion.identity);

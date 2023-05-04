@@ -4,9 +4,8 @@ using UnityEngine;
 
 namespace DefaultNamespace
 {
-    public class LootHandler : MonoBehaviour
+    public class MenuButtons : MonoBehaviour
     {
-        public event Action LootEnd = delegate { };
         private event Action _endAction;
         [SerializeField]
         private GameObject backGround;
@@ -17,18 +16,13 @@ namespace DefaultNamespace
 
         private List<ButtonWithText> _buttons = new List<ButtonWithText>();
 
-        public void AddLootButton(string text, Action action, bool lootInvoke = true)
+        public void AddLootButton(string text, Action action)
         {
             void OnButtonClick()
             {
                 RemoveButtons();
                 ShowMenu(false);
                 action.Invoke();
-                if (lootInvoke)
-                {
-                    LootEnd.Invoke();
-                }
-                _endAction?.Invoke();
             }
 
             var button = _buttonTextFactory.CreateButton(text, OnButtonClick);
@@ -43,7 +37,7 @@ namespace DefaultNamespace
             ShowMenu(true);
         }
 
-        private void ShowMenu(bool value)
+        public void ShowMenu(bool value)
         {
             _rectTransform.sizeDelta = new Vector2(1 + _buttons.Count * 2, 2);
             backGround.SetActive(value);
@@ -60,7 +54,6 @@ namespace DefaultNamespace
                 }
                 _buttons.Clear();
             }
-
         }
     }
 }

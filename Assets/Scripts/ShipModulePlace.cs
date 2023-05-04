@@ -47,26 +47,39 @@ public class ShipModulePlace : MonoBehaviour
         _durabilityHandler.FunctionalityChange += OnFunctionalityChange;
     }
 
-    public void Setup(int baseDurability, int baseCrew, int armor, ModuleLocation moduleLocation, ShipPlaceSignal shipPlaceSignal)
+    public void Setup( ModuleLocation moduleLocation, ShipPlaceSignal shipPlaceSignal)
     {
-        int minCrewRequired = 1;
-        int minDurabilityRequired = 0;
-
-        if (_shipModule != null)
-        {
-            baseDurability += _shipModule.BaseDurability;
-            baseCrew += _shipModule.CrewFull;
-            minCrewRequired = _shipModule.MinCrewRequired;
-            minDurabilityRequired = _shipModule.MinDurabilityRequired;
-        }
-        
-        _crewHandler.Setup(new IntValue(baseCrew), minCrewRequired);
-        _durabilityHandler.Setup(new IntValue(baseDurability), minDurabilityRequired);
-        
-        Armor = armor > 0 ? armor : 0;
         ModuleLocation = moduleLocation;
         _shipPlaceSignal = shipPlaceSignal;
     }
+
+    public void UpdateDurability(int baseDurability)
+    {
+        int minDurabilityRequired = 0;
+        if (_shipModule != null)
+        {
+            baseDurability += _shipModule.BaseDurability;
+            minDurabilityRequired = _shipModule.MinDurabilityRequired;
+        }
+        _durabilityHandler.Setup(new IntValue(baseDurability), minDurabilityRequired);
+    }
+    
+    public void UpdateCrew(int baseCrew)
+    {
+        int minCrewRequired = 1;
+        if (_shipModule != null)
+        {
+            baseCrew += _shipModule.CrewFull;
+            minCrewRequired = _shipModule.MinCrewRequired;
+        }
+        _crewHandler.Setup(new IntValue(baseCrew), minCrewRequired);
+    }
+
+    public void UpdateArmor(int armor)
+    {
+        Armor = armor > 0 ? armor : 0;
+    }
+    
 
     public void CheckAndStartModule()
     {

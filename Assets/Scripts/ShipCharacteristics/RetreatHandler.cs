@@ -94,6 +94,10 @@ namespace ShipCharacteristics
 
         private void OnDestroy()
         {
+            if (_thisShipSpeed == null)
+            {
+                return;
+            }
             _thisShipSpeed.SpeedChange -= RecalculateRetreatChangeValue;
             _enemyShipSpeed.SpeedChange -= RecalculateRetreatChangeValue;
             _cancellationTokenSource?.Cancel();
