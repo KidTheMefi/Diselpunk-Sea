@@ -9,46 +9,62 @@ namespace DefaultNamespace
         public event Action LeaveShipYard = delegate { };
         private BaseShip _playerShip;
         private MenuButtons _menuButtons;
-        
-        public Shipyard(BaseShip playerShip, MenuButtons menuButtons)
+
+        private event Action EndAction;
+
+        public Shipyard(BaseShip playerShip, MenuButtons menuButtons, Action endAction)
         {
             _playerShip = playerShip;
             _menuButtons = menuButtons;
+            EndAction = endAction;
         }
+
         
         public void ShowShipOptionsShipyard()
         {
             _playerShip.ShipCrewHandler.RecoverInjuredCrew();
-        
+
             UpgradeDeckDurability();
             UpgradeDeckCrew();
             UpgradeDeckArmor();
-            _menuButtons.ShowMenu(true);
+            
+            var lootAfterOption = new TestSeaEvents(_playerShip, _menuButtons, EndAction);
+            _menuButtons.AddButton($"Test events", lootAfterOption.ShowEventsOptions);
+            
+            string menuInfo = "You returned to shipyard. You have time for some upgrades";
+            _menuButtons.ShowMenu(menuInfo);
         }
-    
+
         private void UpgradeDeckDurability()
         {
             RandomDeckDurabilityUpgrade upgrade = new RandomDeckDurabilityUpgrade(_playerShip);
-            CreateButton(upgrade);
+            CreateButtonWithEndAction(upgrade);
         }
 
         private void UpgradeDeckCrew()
         {
             RandomDeckCrewUpgrade upgrade = new RandomDeckCrewUpgrade(_playerShip);
-            CreateButton(upgrade);
+            CreateButtonWithEndAction(upgrade);
         }
 
         private void UpgradeDeckArmor()
         {
             RandomDeckArmorUpgrade upgrade = new RandomDeckArmorUpgrade(_playerShip);
-            CreateButton(upgrade);
+            CreateButtonWithEndAction(upgrade);
         }
 
-        private void CreateButton(ILootButtonSetting lootButtonSetting)
+        private void CreateButtonWithEndAction(ILootButtonSetting lootButtonSetting)
         {
             var action = lootButtonSetting.GetAction();
-            action += LeaveShipYard.Invoke;
-            _menuButtons.AddLootButton(lootButtonSetting.GetDescription(), action);
+            //action += LeaveShipYard.Invoke;
+
+            if (EndAction != null)
+            {
+                action += EndAction.Invoke;
+                action += () => EndAction = null;
+            }
+
+            _menuButtons.AddButton(lootButtonSetting.GetDescription(), action);
         }
     }
 }

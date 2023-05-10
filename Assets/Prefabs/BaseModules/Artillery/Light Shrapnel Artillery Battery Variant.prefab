@@ -13,7 +13,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3813497327194521024, guid: 2fec914833077044b979ccbf1f83e48c, type: 3}
       propertyPath: _aiming
-      value: 5
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 3813497327194521024, guid: 2fec914833077044b979ccbf1f83e48c, type: 3}
       propertyPath: _reloadTime

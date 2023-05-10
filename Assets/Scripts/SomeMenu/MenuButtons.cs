@@ -1,27 +1,29 @@
 ﻿using System;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 namespace DefaultNamespace
 {
     public class MenuButtons : MonoBehaviour
     {
-        private event Action _endAction;
         [SerializeField]
         private GameObject backGround;
         [SerializeField]
         private ButtonTextFactory _buttonTextFactory;
         [SerializeField]
         private RectTransform _rectTransform;
+        [SerializeField]
+        private TextMeshProUGUI _menuInfoTMPro;
 
         private List<ButtonWithText> _buttons = new List<ButtonWithText>();
 
-        public void AddLootButton(string text, Action action)
+        public void AddButton(string text, Action action)
         {
             void OnButtonClick()
             {
                 RemoveButtons();
-                ShowMenu(false);
+                HideMenu();
                 action.Invoke();
             }
 
@@ -30,17 +32,16 @@ namespace DefaultNamespace
             _buttons.Add(button);
         }
 
-
-        public void BeginSelecting(Action endAction)
+        public void ShowMenu(string menuInfo)
         {
-            _endAction = endAction;
-            ShowMenu(true);
+            _menuInfoTMPro.text = menuInfo;
+            _rectTransform.sizeDelta = new Vector2(1 + _buttons.Count * 2, _rectTransform.sizeDelta.y);
+            backGround.SetActive(true);
         }
 
-        public void ShowMenu(bool value)
+        private void HideMenu()
         {
-            _rectTransform.sizeDelta = new Vector2(1 + _buttons.Count * 2, 2);
-            backGround.SetActive(value);
+            backGround.SetActive(false);
         }
 
 

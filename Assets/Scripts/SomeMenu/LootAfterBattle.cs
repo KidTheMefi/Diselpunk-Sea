@@ -41,14 +41,14 @@ namespace DefaultNamespace
             AddRandomShells();
 
             _enemyShip.Destroy();
-            _menuButtons.ShowMenu(true);
+            _menuButtons.ShowMenu("You defeat other ship and have time for some loot");
         }
     
     
         private void AddRecoverability()
         {
             var possibleRecoverability = _enemyShip.ShipSurvivability.SurvivabilityValue + Random.Range(1,6);
-            _menuButtons.AddLootButton($"Add recoverability {possibleRecoverability}",
+            _menuButtons.AddButton($"Add recoverability {possibleRecoverability}",
                 () =>
                 {
                     _playerShip.ShipSurvivability.AddRecoverability(possibleRecoverability);
@@ -59,7 +59,7 @@ namespace DefaultNamespace
         private void AddCrew()
         {
             var possibleCrewRecruit = _enemyShip.ShipCrewHandler.OnDutyCrewValue / 2 + Random.Range(1,4);
-            _menuButtons.AddLootButton($"Add crew {possibleCrewRecruit}",
+            _menuButtons.AddButton($"Add crew {possibleCrewRecruit}",
                 () =>
                 {
                     _playerShip.ShipCrewHandler.AddNewCrew(possibleCrewRecruit); 
@@ -72,7 +72,7 @@ namespace DefaultNamespace
             RandomShellsLoot randomShellsLoot = new RandomShellsLoot(_playerShip);
             var action = randomShellsLoot.GetAction();
             action += LeaveLoot.Invoke;
-            _menuButtons.AddLootButton(randomShellsLoot.GetDescription(), action);
+            _menuButtons.AddButton(randomShellsLoot.GetDescription(), action);
         }
         
     }

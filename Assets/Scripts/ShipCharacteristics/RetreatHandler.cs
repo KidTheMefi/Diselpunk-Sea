@@ -1,7 +1,6 @@
 using System;
 using System.Threading;
 using Cysharp.Threading.Tasks;
-using DefaultNamespace;
 using TMPro;
 using UnityEngine;
 
@@ -60,9 +59,7 @@ namespace ShipCharacteristics
             _textMeshPro.color = isButton ? Color.cyan : Color.clear;
             UpdateBar();
         }
-
-
-
+        
         private async UniTask RetreatAsync()
         {
             _cancellationTokenSource = new CancellationTokenSource();

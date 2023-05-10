@@ -41,6 +41,8 @@ public class BaseShip : MonoBehaviour
     public ShipCrewHandler ShipCrewHandler => shipCrewHandler;
     public ShipSurvivability ShipSurvivability => shipSurvivability;
 
+
+    public int RepairValue() => _repairSkillHandler.RepairSkill;
     public int ManeuverabilityValue() => _maneuverabilityHandler.Maneuverability;
     public bool CanEvade() => _maneuverabilityHandler.CanEvade();
     public int DetectionValue() => _detectionHandler.Detection; // write detection handler and providers

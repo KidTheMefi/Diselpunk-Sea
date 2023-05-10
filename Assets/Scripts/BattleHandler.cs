@@ -1,7 +1,5 @@
-using System;
 using Cysharp.Threading.Tasks;
 using DefaultNamespace;
-using LootSettings;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -27,21 +25,20 @@ public class BattleHandler : MonoBehaviour
 
     private Shipyard _shipyard;
     private LootAfterBattle _lootAfterBattle;
+
+    [SerializeField]
+    private bool shipyardAlways;
     
     private void Start()
     {
-        _shipyard = new Shipyard(_baseShipPlayer, _menuButtons);
         _lootAfterBattle = new LootAfterBattle(_baseShipPlayer, _menuButtons);
-        _shipyard.LeaveShipYard += ShipyardOnLeaveShipYard;
-        _lootAfterBattle.LeaveLoot += Patrol;
+        _lootAfterBattle.LeaveLoot += OnLeaveLoot;
         StartAsync().Forget();
     }
-    
-    
-    
-    private void ShipyardOnLeaveShipYard()
+
+    private void OnLeaveLoot()
     {
-        Patrol();
+        Patrol(35);
     }
     
     private async UniTask StartAsync()
@@ -49,8 +46,7 @@ public class BattleHandler : MonoBehaviour
         await _baseShipPlayer.Setup();
         Patrol();
     }
-    
-    
+
     private void Unsub()
     {
         _baseShipPlayer.EndBattleEvent -= OnPlayerEndBattleEvent;
@@ -63,7 +59,7 @@ public class BattleHandler : MonoBehaviour
         {
             case ShipEndBattle.Retreat:
                 Destroy(_baseShipEnemy.gameObject);
-                Patrol();
+                Patrol(50);
                 break;
             case ShipEndBattle.Sinking:
                 LootBegin();
@@ -86,7 +82,7 @@ public class BattleHandler : MonoBehaviour
         if (end == ShipEndBattle.Retreat)
         {
             Destroy(_baseShipEnemy.gameObject);
-            Patrol();
+            Patrol(40);
         }
         else
         {
@@ -101,8 +97,7 @@ public class BattleHandler : MonoBehaviour
         _baseShipPlayer.FinishBattle();
         _baseShipEnemy.FinishBattle();
     }
-    
-    
+
     private BaseShip GetRandomShip()
     {
         int shipNumber =  Random.Range(1, 6);
@@ -118,20 +113,37 @@ public class BattleHandler : MonoBehaviour
         return enemyShip;
     }
 
-    private void Patrol()
+    private void Patrol(int shipyardChance = 0)
     {
+        Debug.Log("Patrol");
         var firstShip = GetRandomShip();
-        _menuButtons.AddLootButton($"Approach {firstShip.gameObject.name}", () =>ShipBattle(firstShip).Forget());
+        _menuButtons.AddButton($"Approach {firstShip.gameObject.name}", () =>ShipBattle(firstShip).Forget());
         
         var secondShip = GetRandomShip();
-        _menuButtons.AddLootButton($"Approach {secondShip.gameObject.name}", () =>ShipBattle(secondShip).Forget());
+        _menuButtons.AddButton($"Approach {secondShip.gameObject.name}", () =>ShipBattle(secondShip).Forget());
 
-
-        if (Random.Range(0,100)< 20)
+        // FOR TEST
+        shipyardChance = shipyardAlways? 100 : shipyardChance;
+        
+        bool shipyard = Random.Range(0, 100) < shipyardChance;
+       
+        if (shipyard)
         {
-            _menuButtons.AddLootButton($"Back to shipyard", _shipyard.ShowShipOptionsShipyard);
+            var shipyardOption = new Shipyard(_baseShipPlayer, _menuButtons, () => Patrol(0));
+            _menuButtons.AddButton($"Back to shipyard", shipyardOption.ShowShipOptionsShipyard);
         }
-        _menuButtons.BeginSelecting(null);
+        
+        
+        if (shipyard)
+        {
+            var shipyardOption = new SosSignalEvent(_baseShipPlayer, _menuButtons, () => Patrol(0));
+            _menuButtons.AddButton($"Listen radio waves", shipyardOption.ShowEventsOptions);
+        }
+        
+
+        string menuInfo = "The ship went out to sea on patrol. You see enemy ships sailing in your direction. \n";
+        menuInfo += shipyard ? "You can retreat to ally shipyard" : "";
+        _menuButtons.ShowMenu(menuInfo);
     }
     
     private async UniTask ShipBattle(BaseShip enemyShip)
@@ -142,5 +154,11 @@ public class BattleHandler : MonoBehaviour
         await _baseShipEnemy.Setup();
         _baseShipEnemy.SetEnemy(_baseShipPlayer);
         _baseShipPlayer.SetEnemy(_baseShipEnemy);
+    }
+    private void OnDestroy()
+    {
+        //_shipyard.LeaveShipYard -= OnLeaveShipYard;
+        _lootAfterBattle.LeaveLoot -= OnLeaveLoot;
+        Unsub();
     }
 }

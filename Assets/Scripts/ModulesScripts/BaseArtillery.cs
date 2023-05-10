@@ -14,9 +14,9 @@ namespace ModulesScripts
         [SerializeField]
         private TextMeshPro _timerText;
         [SerializeField, Range(0.5f, 15f)]
-        private float _reloadTime;
+        protected float _reloadTime;
         [SerializeField, Range(0.5f, 15f)]
-        private float _aiming;
+        protected float _aiming;
         [SerializeField]
         protected Shell _shell;
         [SerializeField]

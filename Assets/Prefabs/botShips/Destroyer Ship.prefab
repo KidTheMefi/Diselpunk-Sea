@@ -1930,6 +1930,7 @@ MonoBehaviour:
   _modules: {fileID: 8343137933341679849}
   _commanderMoveHandler: {fileID: 8343137933000964874}
   _retreatHandler: {fileID: 6367237863936062756}
+  _shellsHandler: {fileID: 0}
   controlledByPlayer: 0
 --- !u!114 &8343137933341679849
 MonoBehaviour:
@@ -5682,7 +5683,7 @@ PrefabInstance:
     - target: {fileID: 8278683347090474218, guid: 33b426c64bec0164984918a47bdee16c, type: 3}
       propertyPath: _shipModulePrefab
       value: 
-      objectReference: {fileID: 700208016276879985, guid: 1bbfc2f41ca83404ab2c3ac557726cd9, type: 3}
+      objectReference: {fileID: 8045254709438439302, guid: 7288bdb4f8ae5b7438a4576ade57dcdd, type: 3}
     - target: {fileID: 8278683347090474219, guid: 33b426c64bec0164984918a47bdee16c, type: 3}
       propertyPath: m_RootOrder
       value: 1
@@ -5820,7 +5821,7 @@ PrefabInstance:
     - target: {fileID: 8278683347090474218, guid: 33b426c64bec0164984918a47bdee16c, type: 3}
       propertyPath: _shipModulePrefab
       value: 
-      objectReference: {fileID: 8045254709438439302, guid: 7288bdb4f8ae5b7438a4576ade57dcdd, type: 3}
+      objectReference: {fileID: 700208016276879985, guid: 1bbfc2f41ca83404ab2c3ac557726cd9, type: 3}
     - target: {fileID: 8278683347090474219, guid: 33b426c64bec0164984918a47bdee16c, type: 3}
       propertyPath: m_RootOrder
       value: 0
