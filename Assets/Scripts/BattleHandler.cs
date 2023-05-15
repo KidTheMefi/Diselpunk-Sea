@@ -1,21 +1,16 @@
+using System;
 using Cysharp.Threading.Tasks;
 using DefaultNamespace;
+using PrefabsStatic;
+using Signals;
+using SomeMenu;
+using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.Events;
 using Random = UnityEngine.Random;
 
 public class BattleHandler : MonoBehaviour
 {
-    [SerializeField]
-    private BaseShip _corvettePrefab;
-    [SerializeField]
-    private BaseShip _frigatePrefab;
-    [SerializeField]
-    private BaseShip _ironcladPrefab;
-    [SerializeField]
-    private BaseShip _destroyerPrefab;
-    [SerializeField]
-    private BaseShip _kruiserPrefab;
-    
     [SerializeField]
     private BaseShip _baseShipPlayer;
     [SerializeField]
@@ -28,24 +23,53 @@ public class BattleHandler : MonoBehaviour
 
     [SerializeField]
     private bool shipyardAlways;
+
+    private UnityEvent _afterLootEvent = new UnityEvent();
+    private PlayerShipSelect _shipSelect;
     
     private void Start()
     {
+        MenuSignal.Instance.BattleWithShip += OnBattleWithShip;
+        MenuSignal.Instance.BackToPatrol += OnBackToPatrol;
+        
+        _shipSelect = new PlayerShipSelect(_menuButtons);
+        _shipSelect.ShipSelected += ShipSelected;
+        _shipSelect.ShowShipsVariants();
+    }
+
+
+    private void ShipSelected(BaseShip ship)
+    {
+        _shipSelect.ShipSelected -= ShipSelected;
+        _baseShipPlayer = Instantiate(ship, new Vector3(-3, -2.5f), quaternion.identity);
         _lootAfterBattle = new LootAfterBattle(_baseShipPlayer, _menuButtons);
         _lootAfterBattle.LeaveLoot += OnLeaveLoot;
         StartAsync().Forget();
     }
-
-    private void OnLeaveLoot()
-    {
-        Patrol(35);
-    }
-    
     private async UniTask StartAsync()
     {
         await _baseShipPlayer.Setup();
         Patrol();
     }
+
+    private void OnLeaveLoot()
+    {
+        if (_afterLootEvent.GetPersistentEventCount() == 0)
+        {
+            _afterLootEvent.AddListener(() =>
+            {
+                var shipyardOption = new SosSignalEvent(_baseShipPlayer, _menuButtons, () => Patrol(0));
+                _menuButtons.AddButton($"Listen radio waves", shipyardOption.ShowEventsOptions);
+                _menuButtons.AddButton($"Go patrol", () => Patrol(30));
+                string menuInfo = "After battle you receive S.O.S. signal nearby";
+                _menuButtons.ShowMenu(menuInfo);
+            });
+        }
+        _afterLootEvent.Invoke();
+        _afterLootEvent.RemoveAllListeners();
+    }
+
+
 
     private void Unsub()
     {
@@ -75,7 +99,7 @@ public class BattleHandler : MonoBehaviour
         _lootAfterBattle.SetShipToLoot(_baseShipEnemy);
         _lootAfterBattle.LootBegin();
     }
-    
+
     private void OnPlayerEndBattleEvent(ShipEndBattle end)
     {
         FinishBattle();
@@ -100,55 +124,56 @@ public class BattleHandler : MonoBehaviour
 
     private BaseShip GetRandomShip()
     {
-        int shipNumber =  Random.Range(1, 6);
-        BaseShip enemyShip = shipNumber switch
-        {
-            1 => _corvettePrefab,
-            2 => _frigatePrefab,
-            3 => _destroyerPrefab,
-            4 => _kruiserPrefab,
-            5 => _ironcladPrefab,
-            _ => _corvettePrefab
-        };
+        BaseShip enemyShip = EnemyShipPrefabs.GetRandomShipPrefab();
         return enemyShip;
     }
 
+    private void OnBackToPatrol()
+    {
+        _menuButtons.RemoveButtons();
+        _menuButtons.HideMenu();
+        Patrol(33);
+    }
+    
     private void Patrol(int shipyardChance = 0)
     {
-        Debug.Log("Patrol");
         var firstShip = GetRandomShip();
-        _menuButtons.AddButton($"Approach {firstShip.gameObject.name}", () =>ShipBattle(firstShip).Forget());
-        
+        _menuButtons.AddButton($"Approach {firstShip.gameObject.name}", () => OnBattleWithShip(firstShip));
+
         var secondShip = GetRandomShip();
-        _menuButtons.AddButton($"Approach {secondShip.gameObject.name}", () =>ShipBattle(secondShip).Forget());
+        _menuButtons.AddButton($"Approach unidentified ship", () => OnBattleWithShip(secondShip));
 
         // FOR TEST
         shipyardChance = shipyardAlways? 100 : shipyardChance;
-        
         bool shipyard = Random.Range(0, 100) < shipyardChance;
-       
+
         if (shipyard)
         {
             var shipyardOption = new Shipyard(_baseShipPlayer, _menuButtons, () => Patrol(0));
             _menuButtons.AddButton($"Back to shipyard", shipyardOption.ShowShipOptionsShipyard);
         }
-        
-        
+
         if (shipyard)
         {
             var shipyardOption = new SosSignalEvent(_baseShipPlayer, _menuButtons, () => Patrol(0));
             _menuButtons.AddButton($"Listen radio waves", shipyardOption.ShowEventsOptions);
         }
-        
 
         string menuInfo = "The ship went out to sea on patrol. You see enemy ships sailing in your direction. \n";
         menuInfo += shipyard ? "You can retreat to ally shipyard" : "";
         _menuButtons.ShowMenu(menuInfo);
     }
-    
-    private async UniTask ShipBattle(BaseShip enemyShip)
+
+    private void OnBattleWithShip(BaseShip ship)
     {
-        _baseShipEnemy = Instantiate(enemyShip, new Vector3(-3,3,0), Quaternion.identity);
+        _menuButtons.RemoveButtons();
+        _menuButtons.HideMenu();
+        ShipBattleInitASync(ship).Forget();
+    }
+
+    private async UniTask ShipBattleInitASync(BaseShip enemyShip)
+    {
+        _baseShipEnemy = Instantiate(enemyShip, new Vector3(-3, 3, 0), Quaternion.identity);
         _baseShipPlayer.EndBattleEvent += OnPlayerEndBattleEvent;
         _baseShipEnemy.EndBattleEvent += EnemyEndBattleEvent;
         await _baseShipEnemy.Setup();
@@ -157,7 +182,7 @@ public class BattleHandler : MonoBehaviour
     }
     private void OnDestroy()
     {
-        //_shipyard.LeaveShipYard -= OnLeaveShipYard;
+        _shipSelect.ShipSelected -= ShipSelected;
         _lootAfterBattle.LeaveLoot -= OnLeaveLoot;
         Unsub();
     }

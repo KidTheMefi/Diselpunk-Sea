@@ -29,7 +29,10 @@ namespace ShipCharacteristics
 
         private void OnMouseDown()
         {
-            StartRetreat();
+            if (!_retreatOn)
+            {
+                StartRetreat();
+            }
         }
 
         public void StartRetreat()
@@ -46,6 +49,13 @@ namespace ShipCharacteristics
             }
         }
 
+        public void DisableRetreat()
+        {
+            _cancellationTokenSource?.Cancel();
+            _retreatLockSprite.enabled = true;
+            _retreatOn = true;
+        }
+        
         public void Setup(SpeedHandler thisShip, SpeedHandler enemyShip,  Action endBattle, bool isButton)
         {
             _retreatLockSprite.enabled = true;

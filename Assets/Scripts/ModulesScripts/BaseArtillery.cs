@@ -23,6 +23,7 @@ namespace ModulesScripts
         private LineRenderer _lineToTargetRenderer;
         [SerializeField]
         private SpriteRenderer _sightSpriteRenderer;
+        private float missChancePerManeuverability = 7.5f;
 
         private BaseShip _shipTarget;
         protected BaseShip _thisShip;
@@ -139,8 +140,8 @@ namespace ModulesScripts
 
         private bool WillMiss()
         {
-            var rand = Random.Range(0, 20);
-            bool miss = _shipTarget.CanEvade() && rand < _shipTarget.ManeuverabilityValue();
+            var rand = Random.Range(0, 100);
+            bool miss = _shipTarget.CanEvade() && rand < missChancePerManeuverability*_shipTarget.ManeuverabilityValue();
             //Debug.Log($"CanEvade({_shipTarget.CanEvade()}). {rand}/{_shipTarget.ManeuverabilityValue()} = {miss}");
             return miss;
         }
@@ -184,7 +185,7 @@ namespace ModulesScripts
             IsInOrder = value;
             UpdateDescription();
 
-            if (!_inBattle)
+            if (!_inBattle || _shipTarget == null)
             {
                 return;
             }

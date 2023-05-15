@@ -19,6 +19,8 @@ namespace ShipCharacteristics
 
         public int MaxCrewValue { get; private set; }
         public int OnDutyCrewValue { get; private set; }
+        [SerializeField]
+        private int reserveCrewValue;
         public int CurrentReserveCrewValue { get; private set; }
         private int CurrentInjuredCrewValue;
         private int CurrentDeadCrewValue;
@@ -62,7 +64,7 @@ namespace ShipCharacteristics
                 MaxCrewValue += crew.CrewValue.MaxValue;
                 OnDutyCrewValue += crew.CrewValue.CurrentValue;
             }
-            CurrentReserveCrewValue = OnDutyCrewValue/2;
+            CurrentReserveCrewValue = reserveCrewValue > 0 ? reserveCrewValue : OnDutyCrewValue/2;
             MaxCrewValue += CurrentReserveCrewValue;
             UpdateCrewText();
         }

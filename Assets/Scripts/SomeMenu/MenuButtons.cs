@@ -32,6 +32,22 @@ namespace DefaultNamespace
             _buttons.Add(button);
         }
 
+        public ButtonWithText AddButtonInteractable(string text, Action action, bool interactable)
+        {
+            var button = _buttonTextFactory.CreateButton();
+            button.transform.SetParent(transform);
+            button.SetInteractable(interactable);
+            
+            void OnButtonClick()
+            {
+                button.SetInteractable(false);
+                action.Invoke();
+            }
+            button.SetupButton(text, OnButtonClick);
+            _buttons.Add(button);
+            return button;
+        }
+
         public void ShowMenu(string menuInfo)
         {
             _menuInfoTMPro.text = menuInfo;
@@ -39,13 +55,18 @@ namespace DefaultNamespace
             backGround.SetActive(true);
         }
 
-        private void HideMenu()
+        public void AddTextToMenu(string text)
+        {
+            _menuInfoTMPro.text +=$"\n{text}";
+        }
+
+        public void HideMenu()
         {
             backGround.SetActive(false);
         }
 
 
-        private void RemoveButtons()
+        public void RemoveButtons()
         {
             if (_buttons != null)
             {

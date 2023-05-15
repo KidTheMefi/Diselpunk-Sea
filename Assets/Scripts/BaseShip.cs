@@ -35,13 +35,20 @@ public class BaseShip : MonoBehaviour
     [SerializeField]
     private ShellsHandler _shellsHandler;
     [SerializeField]
+    private ShipPrestigeHandler _shipPrestigeHandler;
+    [SerializeField]
     private bool controlledByPlayer;
-
+    [SerializeField, Range(0, 10)]
+    private int _prestigeReward;
+    public int PrestigeReward => _prestigeReward;
+    
     private BaseShip _enemyShip;
     public ShipCrewHandler ShipCrewHandler => shipCrewHandler;
     public ShipSurvivability ShipSurvivability => shipSurvivability;
+    public ShipPrestigeHandler ShipPrestigeHandler => _shipPrestigeHandler;
 
 
+    public int MedicineValue() => _medicineHandler.Medicine;
     public int RepairValue() => _repairSkillHandler.RepairSkill;
     public int ManeuverabilityValue() => _maneuverabilityHandler.Maneuverability;
     public bool CanEvade() => _maneuverabilityHandler.CanEvade();
@@ -82,11 +89,16 @@ public class BaseShip : MonoBehaviour
 
         shipSurvivability.Setup(_modules.GetDurabilityModuleHandlers(), _repairSkillHandler, _modules.GetProvidersList<IRecoverabilityProvider>(), durabilitySignal, () => EndBattleEvent.Invoke(ShipEndBattle.Sinking));
         shipCrewHandler.Setup(_modules.GetCrewModuleHandlers(), _medicineHandler, () => EndBattleEvent.Invoke(ShipEndBattle.Surrender));
-
-
+        
 //        _retreatHandler.Setup(_speedHandler, _enemyShip.SpeedHandler, () => EndBattleEvent.Invoke(ShipEndBattle.Retreat), controlledByPlayer);
         _commanderMoveHandler.ControlledByPlayer(controlledByPlayer);
         Observation(false);
+        
+        if (_shipPrestigeHandler != null)
+        {
+            _shipPrestigeHandler.SetPrestige(_prestigeReward);
+        }
+        _modules.ActivateAllModules();
     }
 
     public void SetEnemy(BaseShip enemyShip)
@@ -123,14 +135,14 @@ public class BaseShip : MonoBehaviour
     {
         var evasionProviderList = _modules.GetProvidersList<IEvasionProvider>();
         var evasionProvider = evasionProviderList.Count > 0 ? evasionProviderList[0] : null;
-        _maneuverabilityHandler.Setup(1, _modules.GetProvidersList<IManeuverabilityProvider>(), evasionProvider);
+        _maneuverabilityHandler.Setup(_modules.GetProvidersList<IManeuverabilityProvider>(), evasionProvider);
     }
 
     private void SetupMedicine()
     {
         var quickRecoveryProviderList = _modules.GetProvidersList<IQuickRecoveryProvider>();
         var quickRecoveryProvider = quickRecoveryProviderList.Count > 0 ? quickRecoveryProviderList[0] : null;
-        _medicineHandler.Setup(0, _modules.GetProvidersList<IMedicineProvider>(), quickRecoveryProvider);
+        _medicineHandler.Setup( _modules.GetProvidersList<IMedicineProvider>(), quickRecoveryProvider);
     }
 
     private void SetupRepair()
@@ -156,6 +168,7 @@ public class BaseShip : MonoBehaviour
         {
             artillery.BattleEnd();
         }
+        _retreatHandler.DisableRetreat();
     }
 
     public void Destroy()

@@ -10,6 +10,7 @@ namespace ShipCharacteristics
     {
         private IntValue ManeuverabilityValue = new IntValue(30);
         private List<IManeuverabilityProvider> _maneuverabilityProviders;
+        [SerializeField, Range(0,2)]
         private int _baseManeuverability;
 
         [SerializeField]
@@ -24,11 +25,10 @@ namespace ShipCharacteristics
             return _evasionProvider != null && _evasionProvider.HasEvasion();
         }
         
-        public void Setup(int baseManeuverability, List<IManeuverabilityProvider> maneuverabilityProviders, IEvasionProvider evasionProvider)
+        public void Setup(List<IManeuverabilityProvider> maneuverabilityProviders, IEvasionProvider evasionProvider)
         {
             _evasionProvider = evasionProvider;
-            _baseManeuverability = baseManeuverability;
-            ManeuverabilityValue.SetValueTo(baseManeuverability);
+            ManeuverabilityValue.SetValueTo(_baseManeuverability);
             _maneuverabilityProviders = maneuverabilityProviders;
             CalculateCurrentManeuverability();
 

@@ -46,6 +46,7 @@ namespace ModulesScripts
         public override void SetActive(bool value)
         {
             IsInOrder = value;
+            
             if (_targetShip != null)
             {
                 _targetShip.Observation(hasCommanderOnDuty&&IsInOrder);

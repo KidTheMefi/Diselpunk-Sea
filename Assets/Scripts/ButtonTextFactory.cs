@@ -13,7 +13,7 @@ namespace DefaultNamespace
 
         private void Awake()
         {
-            _buttonPool = new ObjectPool<ButtonWithText>(InstantiateButton, TurnBombshellOn, TurnBombshellOff, 5, true);
+            _buttonPool = new ObjectPool<ButtonWithText>(InstantiateButton, TurnButtonOn, TurnButtonOff, 5, true);
         }
 
         private ButtonWithText InstantiateButton()
@@ -24,12 +24,12 @@ namespace DefaultNamespace
             return button;
         }
 
-        private void TurnBombshellOff(ButtonWithText button)
+        private void TurnButtonOff(ButtonWithText button)
         {
             button.CleanButton();
             button.gameObject.SetActive(false);
         }
-        private void TurnBombshellOn(ButtonWithText bombshell)
+        private void TurnButtonOn(ButtonWithText bombshell)
         {
             bombshell.gameObject.SetActive(true);
         }
@@ -38,6 +38,12 @@ namespace DefaultNamespace
         {
             var button = _buttonPool.GetObject();
             button.SetupButton(text, action);
+            return button;
+        }
+        
+        public ButtonWithText CreateButton()
+        {
+            var button = _buttonPool.GetObject();
             return button;
         }
 

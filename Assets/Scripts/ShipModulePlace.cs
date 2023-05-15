@@ -1,11 +1,9 @@
-using System;
 using CrewCommanders;
 using DefaultNamespace;
 using ModulesScripts;
 using ShipModuleScripts.ModuleCrew;
 using ShipModuleScripts.ModuleDurability;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 public class ShipModulePlace : MonoBehaviour
 {

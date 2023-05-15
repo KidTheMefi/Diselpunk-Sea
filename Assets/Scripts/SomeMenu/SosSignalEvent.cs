@@ -1,5 +1,7 @@
 ﻿using System;
+using SomeMenu;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace DefaultNamespace
 {
@@ -18,16 +20,24 @@ namespace DefaultNamespace
         
         public void ShowEventsOptions()
         {
-            var shipyardOption = new SosDamagedShipEvent(_playerShip, _menuButtons, EndAction);
+            //var shipyardOption = new SosDamagedShipEvent(_playerShip, _menuButtons, EndAction);
+            //var shipyardOption = new SosDiseaseShipEvent(_playerShip, _menuButtons, EndAction);
+
+            IMenuEvent shipyardOption = Random.Range(0, 3) switch
+            {
+                0 => new SosAmbushEvent(_playerShip, _menuButtons),
+                1 => new SosDiseaseShipEvent(_playerShip, _menuButtons, EndAction),
+                _ => new SosDamagedShipEvent(_playerShip, _menuButtons, EndAction)
+            };
             
-            _menuButtons.AddButton($"Set a course on the signal.", shipyardOption.ShowEventsOptions);
+            _menuButtons.AddButton($"Set a course on the signal.", shipyardOption.BeginEvent);
             _menuButtons.AddButton("Ignore signal" , () =>
             {
                 EndAction?.Invoke();
             });
             
             
-            string menuInfo = "You receive SOS signal";
+            string menuInfo = "You receive S.O.S. signal";
             _menuButtons.ShowMenu(menuInfo);
         }
     }

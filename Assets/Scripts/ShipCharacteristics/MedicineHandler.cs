@@ -9,6 +9,7 @@ namespace ShipCharacteristics
     {
         private IntValue _medicineValue = new IntValue(10);
         private List<IMedicineProvider> _medicineProviders;
+        [SerializeField, Range(0,2)]
         private int _baseMedicine;
 
         [SerializeField]
@@ -18,10 +19,9 @@ namespace ShipCharacteristics
         private IQuickRecoveryProvider _quickRecoveryProvider;
         
         
-        public void Setup(int baseMedicine, List<IMedicineProvider> medicineProviders, IQuickRecoveryProvider quickRecoveryProvider = null)
+        public void Setup(List<IMedicineProvider> medicineProviders, IQuickRecoveryProvider quickRecoveryProvider = null)
         {
             _quickRecoveryProvider = quickRecoveryProvider;
-            _baseMedicine = baseMedicine;
             _medicineValue.SetValueTo(_baseMedicine);
             _medicineProviders = medicineProviders;
             CalculateCurrentMedicine();

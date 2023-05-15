@@ -29,19 +29,20 @@ namespace DefaultNamespace
         public void LootBegin()
         {
             _playerShip.ShipCrewHandler.RecoverInjuredCrew();
-
             if (_enemyShip == null)
             {
                 LeaveLoot.Invoke();
                 return;
             }
             
+            int prestigeReward = _enemyShip.PrestigeReward;
+            _playerShip.ShipPrestigeHandler.AddPrestige(prestigeReward);
+            
             AddRecoverability();
             AddCrew();
             AddRandomShells();
-
+            _menuButtons.ShowMenu($"You defeat {_enemyShip.gameObject.name} and receive {prestigeReward} prestige. You have time for some loot");
             _enemyShip.Destroy();
-            _menuButtons.ShowMenu("You defeat other ship and have time for some loot");
         }
     
     
