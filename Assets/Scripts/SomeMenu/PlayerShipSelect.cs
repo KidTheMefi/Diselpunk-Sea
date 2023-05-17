@@ -24,6 +24,7 @@ namespace SomeMenu
             _menuButtons.AddButton("BattleShip", () => ShipSelected.Invoke(PlayerShipPrefabs.BattleShipPrefab));
             _menuButtons.AddButton("Ironclad", () => ShipSelected.Invoke(PlayerShipPrefabs.IroncladPrefab));
             _menuButtons.AddButton("Frigate", () => ShipSelected.Invoke(PlayerShipPrefabs.FrigatePrefab));
+            _menuButtons.AddButton("TestShip", () => ShipSelected.Invoke(PlayerShipPrefabs.TestShipPrefab));
             
             _menuButtons.ShowMenu("BattleShip - big ship with 4 different type artillery position. " +
                 "\nIronClad - ship with better armor and 3 default artillery position. " +

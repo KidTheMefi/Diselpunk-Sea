@@ -216,8 +216,7 @@ namespace ShipModuleScripts.ModuleDurability
             {
                 return;
             }
-
-            DamageHighlight().Forget();
+            
             _durabilitySignals.DurabilityDamagedInvoke(value);
             ChangeDurabilityFor(-value);
             Repair();

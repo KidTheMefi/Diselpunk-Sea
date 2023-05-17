@@ -48,6 +48,7 @@ public class BaseShip : MonoBehaviour
     public ShipPrestigeHandler ShipPrestigeHandler => _shipPrestigeHandler;
 
 
+    public bool ControlledByPlayer => controlledByPlayer;
     public int MedicineValue() => _medicineHandler.Medicine;
     public int RepairValue() => _repairSkillHandler.RepairSkill;
     public int ManeuverabilityValue() => _maneuverabilityHandler.Maneuverability;
@@ -80,11 +81,15 @@ public class BaseShip : MonoBehaviour
 
         _speedHandler.Setup(_modules.GetProvidersList<ISpeedProvider>());
         _detectionHandler.Setup(1, _modules.GetProvidersList<IDetectionProvider>());
-
-
-        foreach (var moduleSCR in _modules.GetProvidersList<IShipCharacteristicsRequired>())
+        
+        foreach (var shellsRequired in _modules.GetProvidersList<IShellsHandlerRequired>())
         {
-            moduleSCR.SetCharacteristics(this);
+            shellsRequired.SetShellsHandler(_shellsHandler);
+        }
+
+        foreach (var moduleDetectionRequired in _modules.GetProvidersList<ICurrentDetectionRequired>())
+        {
+            moduleDetectionRequired.SetDetection(_detectionHandler);
         }
 
         shipSurvivability.Setup(_modules.GetDurabilityModuleHandlers(), _repairSkillHandler, _modules.GetProvidersList<IRecoverabilityProvider>(), durabilitySignal, () => EndBattleEvent.Invoke(ShipEndBattle.Sinking));
@@ -105,6 +110,7 @@ public class BaseShip : MonoBehaviour
     {
         _enemyShip = enemyShip;
         _retreatHandler.Setup(_speedHandler, _enemyShip.SpeedHandler, () => EndBattleEvent.Invoke(ShipEndBattle.Retreat), controlledByPlayer);
+        
         foreach (var moduleTR in _modules.GetProvidersList<ITargetRequired>())
         {
             moduleTR.SetShipTarget(_enemyShip);
@@ -161,16 +167,21 @@ public class BaseShip : MonoBehaviour
         _commanderMoveHandler.ShowCommanders(value);
         _modules.EnableHpVisual(value);
     }
-
+    
     public void FinishBattle()
     {
-        foreach (var artillery in _modules.GetProvidersList<BaseArtillery>())
+        foreach (var module in _modules.GetProvidersList<IAfterBattleTurnOff>())
         {
-            artillery.BattleEnd();
+            module.BattleEnd();
         }
         _retreatHandler.DisableRetreat();
     }
 
+    public void DamageRecoverAbility(int damageValue)
+    {
+        shipSurvivability.RecoverabilityDamage(damageValue);
+    }
+    
     public void Destroy()
     {
         Destroy(gameObject);

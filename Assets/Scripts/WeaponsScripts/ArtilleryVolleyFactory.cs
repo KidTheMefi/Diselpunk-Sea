@@ -8,15 +8,15 @@ namespace DefaultNamespace
         public static ArtilleryVolleyFactory Instance => _instance;
         
         [SerializeField]
-        private Bombshell bombshellPrefab;
-        private ObjectPool<Bombshell> _characterPool;
+        private BombshellProjectile bombshellProjectilePrefab;
+        private ObjectPool<BombshellProjectile> _characterPool;
 
         private void Awake()
         {
             if (_instance == null)
             {
                 _instance = this;
-                _characterPool = new ObjectPool<Bombshell>(InstantiateBombshell, TurnBombshellOn, TurnBombshellOff, 20, true);
+                _characterPool = new ObjectPool<BombshellProjectile>(InstantiateBombshell, TurnBombshellOn, TurnBombshellOff, 20, true);
             }
             else
             {
@@ -24,21 +24,21 @@ namespace DefaultNamespace
             }
         }
         
-        private Bombshell InstantiateBombshell()
+        private BombshellProjectile InstantiateBombshell()
         {
-            var bombshell = Instantiate(bombshellPrefab, transform);
+            var bombshell = Instantiate(bombshellProjectilePrefab, transform);
             bombshell.transform.position = Vector3.up*20;
             bombshell.RemoveEvent += BackToPool;
             return bombshell;
         }
         
-        private void TurnBombshellOff(Bombshell bombshell)
+        private void TurnBombshellOff(BombshellProjectile bombshellProjectile)
         {
-            bombshell.gameObject.SetActive(false);
+            bombshellProjectile.gameObject.SetActive(false);
         }
-        private void TurnBombshellOn(Bombshell bombshell)
+        private void TurnBombshellOn(BombshellProjectile bombshellProjectile)
         {
-            bombshell.gameObject.SetActive(true);
+            bombshellProjectile.gameObject.SetActive(true);
         }
 
         public void FireBombshell(Shell shell, ShipModulePlace target, Vector3 startPosition, bool miss = false)
@@ -48,15 +48,15 @@ namespace DefaultNamespace
             bombshell.Fire(shell, target, miss);
         }
         
-        private void BackToPool(Bombshell bombshell)
+        private void BackToPool(BombshellProjectile bombshellProjectile)
         {
-            if (bombshell == null)
+            if (bombshellProjectile == null)
             {
                 return;
             }
-            bombshell.transform.SetParent(transform);
-            bombshell.transform.position = Vector3.up*20;
-            _characterPool.ReturnObject(bombshell);
+            bombshellProjectile.transform.SetParent(transform);
+            bombshellProjectile.transform.position = Vector3.up*20;
+            _characterPool.ReturnObject(bombshellProjectile);
         }
     }
 }

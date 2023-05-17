@@ -26,10 +26,9 @@ namespace ShipModuleScripts.ModuleDurability
         {
             DurabilityDamaged.Invoke(value);
         }
-        
-        public void RequestRepairInvoke(DurabilityHandler crewHandler, int value)
+        public void RequestRepairInvoke(DurabilityHandler durabilityHandler, int value)
         {
-            RequestRepair.Invoke(crewHandler, value);
+            RequestRepair.Invoke(durabilityHandler, value);
         }
 
         public void HaveRecoverabilityPoint(bool value)

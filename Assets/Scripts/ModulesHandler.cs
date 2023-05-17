@@ -18,10 +18,11 @@ namespace DefaultNamespace
         private ShipPlaceSignal _shipPlaceSignal = new ShipPlaceSignal();
         public ShipPlaceSignal ShipPlaceSignal => _shipPlaceSignal;
         public List<ShipModulePlace> modulesPlaces { get; private set;}
-        
-        public ShipModulePlace[] LowerDeckPlaces { get; private set;}
-        public ShipModulePlace[] MainDeckPlaces { get; private set;}
-        public ShipModulePlace[] DeckHousePlaces { get; private set;}
+
+        public ShipModulePlace[] LowerDeckPlaces => _lowerDeck.DeckPlaces;
+
+        public ShipModulePlace[] MainDeckPlaces => _mainDeck.DeckPlaces;
+        public ShipModulePlace[] DeckHousePlaces => _deckHouse.DeckPlaces;
 
         [SerializeField]
         private Deck _lowerDeck;

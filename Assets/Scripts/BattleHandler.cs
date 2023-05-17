@@ -58,7 +58,7 @@ public class BattleHandler : MonoBehaviour
         {
             _afterLootEvent.AddListener(() =>
             {
-                var shipyardOption = new SosSignalEvent(_baseShipPlayer, _menuButtons, () => Patrol(0));
+                var shipyardOption = new SosSignalEvent(_baseShipPlayer, _menuButtons, () => Patrol(30));
                 _menuButtons.AddButton($"Listen radio waves", shipyardOption.ShowEventsOptions);
                 _menuButtons.AddButton($"Go patrol", () => Patrol(30));
                 string menuInfo = "After battle you receive S.O.S. signal nearby";
@@ -145,18 +145,13 @@ public class BattleHandler : MonoBehaviour
 
         // FOR TEST
         shipyardChance = shipyardAlways? 100 : shipyardChance;
-        bool shipyard = Random.Range(0, 100) < shipyardChance;
-
+        int rand = Random.Range(0, 100);
+        bool shipyard =rand  < shipyardChance;
+        Debug.Log($"{rand}/{shipyardChance} - {shipyard}");
         if (shipyard)
         {
             var shipyardOption = new Shipyard(_baseShipPlayer, _menuButtons, () => Patrol(0));
             _menuButtons.AddButton($"Back to shipyard", shipyardOption.ShowShipOptionsShipyard);
-        }
-
-        if (shipyard)
-        {
-            var shipyardOption = new SosSignalEvent(_baseShipPlayer, _menuButtons, () => Patrol(0));
-            _menuButtons.AddButton($"Listen radio waves", shipyardOption.ShowEventsOptions);
         }
 
         string menuInfo = "The ship went out to sea on patrol. You see enemy ships sailing in your direction. \n";

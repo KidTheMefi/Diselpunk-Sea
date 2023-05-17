@@ -7,5 +7,6 @@ namespace PrefabsStatic
         public static BaseShip BattleShipPrefab => Resources.Load<BaseShip>("Prefabs/PlayerShips/PlayerBattleShip");
         public static BaseShip FrigatePrefab => Resources.Load<BaseShip>("Prefabs/PlayerShips/PlayerFrigateShip");
         public static BaseShip IroncladPrefab => Resources.Load<BaseShip>("Prefabs/PlayerShips/PlayerIronCladShip");
+        public static BaseShip TestShipPrefab => Resources.Load<BaseShip>("Prefabs/PlayerShips/TestShip");
     }
 }

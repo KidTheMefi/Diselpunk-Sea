@@ -59,7 +59,7 @@ namespace ShipCharacteristics
 
 
         }
-
+        
         public void UpdateSurvivability()
         {
             SurvivabilityValue = 0;
@@ -110,6 +110,13 @@ namespace ShipCharacteristics
             {
                 ShipDestroyed();
             }
+            UpdateSurvivabilityText();
+        }
+        
+        public void RecoverabilityDamage(int damage)
+        {
+            _recoverabilityValue -= damage;
+            _recoverabilityValue = _recoverabilityValue < 0 ? 0 : _recoverabilityValue;
             UpdateSurvivabilityText();
         }
 

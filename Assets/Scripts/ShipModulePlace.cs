@@ -123,7 +123,6 @@ public class ShipModulePlace : MonoBehaviour
         _durabilityHandler.Damage(value);
     }
 
-
     private void OnCrewFunctionalityChanged()
     {
         _durabilityHandler.EnoughCrewToRepair(_crewHandler.Functional);

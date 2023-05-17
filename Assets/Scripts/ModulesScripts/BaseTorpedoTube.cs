@@ -10,29 +10,25 @@ using Random = UnityEngine.Random;
 
 namespace ModulesScripts
 {
-    public class BaseArtillery : ShipModule, ITargetRequired, ICurrentDetectionRequired, IAfterBattleTurnOff
+    public class BaseTorpedoTube: ShipModule, ITargetRequired, ICurrentDetectionRequired, IAfterBattleTurnOff
     {
         [SerializeField]
         private TextMeshPro _timerText;
         [SerializeField, Range(0.5f, 15f)]
-        protected float _reloadTime;
+        private float _reloadTime;
         [SerializeField, Range(0.5f, 15f)]
-        protected float _aiming;
+        private float _aiming;
         [SerializeField]
-        protected Shell _shell;
-        [SerializeField]
-        private LineRenderer _lineToTargetRenderer;
-        [SerializeField]
-        private SpriteRenderer _sightSpriteRenderer;
+        private Torpedo _torpedo;
+      
         private float missChancePerManeuverability = 7.5f;
 
         private BaseShip _shipTarget;
-        protected DetectionHandler _thisShipDetectionHandler;
+        private DetectionHandler _thisShipDetectionHandler;
         
-        private bool _waitingForTarget;
         private bool _inBattle;
         private CancellationTokenSource _fireCTS;
-        private ShipModulePlace _targetPlace;
+
         
         public void SetShipTarget(BaseShip targetShip)
         {
@@ -45,61 +41,8 @@ namespace ModulesScripts
         {
             _thisShipDetectionHandler = detectionHandler;
         }
-        public override void SetCommanderOnDuty(bool value)
-        {
-            base.SetCommanderOnDuty(value);
-            if (!value)
-            {
-                DisableAiming();
-            }
-        }
 
-        private void DisableAiming()
-        {
-            _lineToTargetRenderer.enabled = false;
-            _targetPlace = null;
-            SetWaitingForTarget(false);
-        }
-
-        public override void ClickOn()
-        {
-            //Debug.Log($"{IsInOrder} && {hasCommanderOnDuty} && {!_waitingForTarget}");
-            if (IsInOrder && hasCommanderOnDuty && !_waitingForTarget)
-            {
-                SetWaitingForTarget(true);
-            }
-        }
-
-        private void SetWaitingForTarget(bool value)
-        {
-            if (_waitingForTarget == value)
-            {
-                return;
-            }
-            if (value)
-            {
-                _shipTarget.Modules.ShipPlaceSignal.OnShipModulePlaceClick += AimingForModulePlace;
-            }
-            else
-            {
-                _shipTarget.Modules.ShipPlaceSignal.OnShipModulePlaceClick -= AimingForModulePlace;
-            }
-            _sightSpriteRenderer.enabled = value;
-            _waitingForTarget = value;
-        }
-        
-        
-        private void AimingForModulePlace(ShipModulePlace obj)
-        {
-            _lineToTargetRenderer.enabled = true;
-            _lineToTargetRenderer.useWorldSpace = true;
-            _lineToTargetRenderer.SetPositions(new[] { transform.position, obj.transform.position });
-            _targetPlace = obj;
-            SetWaitingForTarget(false);
-        }
-
-
-        protected virtual async UniTask ReloadAsync(CancellationToken token)
+        private async UniTask ReloadAsync(CancellationToken token)
         {
             //_fireCTS = new CancellationTokenSource();
             UpdateDescription();
@@ -114,7 +57,9 @@ namespace ModulesScripts
         {
             float targetingDifficulty = _shipTarget.ManeuverabilityValue() - _thisShipDetectionHandler.Detection;
             targetingDifficulty = targetingDifficulty < 0 ? 0 : targetingDifficulty;
+            
             float targetingTime = _aiming * (1 + targetingDifficulty * 0.1f);
+            targetingTime = hasCommanderOnDuty ? targetingTime / 2 : targetingTime;
             await TimerAsync("Targeting", targetingTime, token);
             if (!token.IsCancellationRequested)
             {
@@ -122,13 +67,15 @@ namespace ModulesScripts
             }
         }
 
-        protected virtual async UniTask Fire(CancellationToken token)
+        private async UniTask Fire(CancellationToken token)
         {
-            var targetModule = _targetPlace == null ? _shipTarget.Modules.GetRandomModule() : _targetPlace;
-            ArtilleryVolleyFactory.Instance.FireBombshell(GetShell(), targetModule, transform.position, WillMiss());
-
+            if (_shipTarget == null)
+            {
+                Debug.Log("target zero");
+            }
+            TorpedoFactory.Instance.TorpedoLaunch(_torpedo, _shipTarget, transform.position);
             _timerText.color = new Color(1f, 0.5f, 0f, 1);
-            _timerText.text = "FIRE!";
+            _timerText.text = "Launch!";
             await UniTask.Delay(TimeSpan.FromSeconds(0.25f));
             _timerText.color = Color.white;
             _timerText.text = "";
@@ -138,15 +85,7 @@ namespace ModulesScripts
             }
         }
 
-        private bool WillMiss()
-        {
-            var rand = Random.Range(0, 100);
-            bool miss = _shipTarget.CanEvade() && rand < missChancePerManeuverability*_shipTarget.ManeuverabilityValue();
-            //Debug.Log($"CanEvade({_shipTarget.CanEvade()}). {rand}/{_shipTarget.ManeuverabilityValue()} = {miss}");
-            return miss;
-        }
-
-        protected async UniTask TimerAsync(string timerName, float time, CancellationToken token)
+        private async UniTask TimerAsync(string timerName, float time, CancellationToken token)
         {
             time = time < 0 ? 0 : time;
 
@@ -170,11 +109,7 @@ namespace ModulesScripts
 
         private void UpdateDescription()
         {
-            string description = $"Artillery. \n" +
-                $"{GetShell().BaseDamage} Damage.  " +
-                $"{GetShell().BaseCrewDamage} Crew damage.  " +
-                $"{GetShell().ArmorPiercingClass} AP class.  " +
-                $"{GetShell().ShellType}.  " +
+            string description = $"Torpedo. \n" +
                 $"{_reloadTime}+{_aiming} min shoot Time. " /*+
                 $"{GetBaseDescription()} "*/;
             moduleDescription.SetDescriptionText(description);
@@ -198,20 +133,13 @@ namespace ModulesScripts
             }
             else
             {
-                DisableAiming();
                 _fireCTS?.Cancel();
                 _timerText.text = "out of order";
             }
         }
 
-        protected virtual Shell GetShell()
-        {
-            return _shell;
-        }
-
         public void BattleEnd()
         {
-            DisableAiming();
             _fireCTS?.Cancel();
             _inBattle = false;
         }

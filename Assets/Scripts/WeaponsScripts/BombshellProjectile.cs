@@ -7,9 +7,9 @@ using Random = UnityEngine.Random;
 
 namespace DefaultNamespace
 {
-    public class Bombshell : MonoBehaviour
+    public class BombshellProjectile : MonoBehaviour
     {
-        public event Action<Bombshell> RemoveEvent = delegate(Bombshell bombshell) { };
+        public event Action<BombshellProjectile> RemoveEvent = delegate(BombshellProjectile bombshell) { };
         private CancellationTokenSource _movementCTS;
         [SerializeField]
         private float _moveSpeed;
