@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: f99aa16d82cd454b91cf2a2ebed98425
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - _moduleImage: {instanceID: 0}
+  - _baseTorpedoTubePrefab: {fileID: 1930138456794629099, guid: 340ce7fc79868b741a811ad55024b7f4, type: 3}
+  - _torpedo: {fileID: 11400000, guid: 2f41bdcc25db51143aa302a5f61d9634, type: 2}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

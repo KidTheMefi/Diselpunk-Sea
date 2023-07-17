@@ -1,0 +1,13 @@
+fileFormatVersion: 2
+guid: aed736eb9066469b969ca9456b137e5d
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - _moduleImage: {instanceID: 0}
+  - baseSonarPrefab: {fileID: 8992125066511799454, guid: df54c2684700dcf47b67fa7676a6a9f0, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

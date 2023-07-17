@@ -1,5 +1,6 @@
 ﻿using System;
 using InterfaceProviders;
+using ModulesScripts.ModulesSetup;
 using UnityEngine;
 
 namespace ModulesScripts
@@ -9,7 +10,7 @@ namespace ModulesScripts
         public event Action RepairSkillChanged = delegate { };
 
         [SerializeField, Range(0,9)]
-        private int _repaireSkillValue;
+        private int _repairSkillValue;
         [SerializeField, Range(0,50)]
         private int _recoverability;
 
@@ -17,11 +18,19 @@ namespace ModulesScripts
         {
             UpdateDescription();
         }
+        
+        public void Setup(BaseEngineeringDepartmentSetup setup)
+        {
+            _recoverability = setup.Recoverability;
+            _repairSkillValue = setup.RepairSkillValue;
+            BaseSetup(setup);
+            UpdateDescription();
+        }
 
         private void UpdateDescription()
         {
             string description = $"Engineering Department. " +
-                $"+{_repaireSkillValue} repair.  " +
+                $"+{_repairSkillValue} repair.  " +
                 $"{GetBaseDescription()} ";
             moduleDescription.SetDescriptionText(description);
         }
@@ -36,7 +45,7 @@ namespace ModulesScripts
         
         public int GetRepairSkill()
         {
-            return IsInOrder ? _repaireSkillValue : 0;
+            return IsInOrder ? _repairSkillValue : 0;
         }
         public int GetAdditionalRecoverability()
         {

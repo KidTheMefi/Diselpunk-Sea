@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f99aa16d82cd454b91cf2a2ebed98425, type: 3}
+  m_Name: Base Torpedo Tube
+  m_EditorClassIdentifier: 
+  _moduleImage: {fileID: 21300000, guid: 42bd0a4614a0ed646b074533773ec597, type: 3}
+  crewFull: 2
+  baseDurability: 2
+  minCrewRequired: 2
+  minDurabilityRequired: 2
+  _baseTorpedoTubePrefab: {fileID: 1930138456794629099, guid: 340ce7fc79868b741a811ad55024b7f4, type: 3}
+  _reloadTime: 3
+  _aiming: 7
+  _torpedo: {fileID: 11400000, guid: 2f41bdcc25db51143aa302a5f61d9634, type: 2}

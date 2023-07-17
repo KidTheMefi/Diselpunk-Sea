@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aed736eb9066469b969ca9456b137e5d, type: 3}
+  m_Name: Massive Water Pump
+  m_EditorClassIdentifier: 
+  _moduleImage: {fileID: 0}
+  crewFull: 4
+  baseDurability: 5
+  minCrewRequired: 2
+  minDurabilityRequired: 2
+  baseSonarPrefab: {fileID: 8992125066511799454, guid: df54c2684700dcf47b67fa7676a6a9f0, type: 3}
+  _pumpPowerValue: 2

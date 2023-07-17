@@ -8,7 +8,7 @@ namespace ShipCharacteristics
     public class DetectionHandler : MonoBehaviour
     {
         private IntValue _detectionValue = new IntValue(30);
-        private List<IDetectionProvider> _maneuverabilityProviders;
+        private List<IDetectionProvider> _detectionProviders;
         private int _baseDetection;
 
         [SerializeField]
@@ -20,10 +20,10 @@ namespace ShipCharacteristics
         {
             _baseDetection = baseDetection;
             _detectionValue.SetValueTo(baseDetection);
-            _maneuverabilityProviders = maneuverabilityProviders;
+            _detectionProviders = maneuverabilityProviders;
             CalculateCurrentManeuverability();
 
-            foreach (var provider in _maneuverabilityProviders)
+            foreach (var provider in _detectionProviders)
             {
                 provider.DetectionChanged += CalculateCurrentManeuverability;
             }
@@ -32,7 +32,7 @@ namespace ShipCharacteristics
         private void CalculateCurrentManeuverability()
         {
             int newValue = _baseDetection;
-            foreach (var provider in _maneuverabilityProviders)
+            foreach (var provider in _detectionProviders)
             {
                 newValue += provider.GetDetection();
             }
@@ -42,7 +42,7 @@ namespace ShipCharacteristics
 
         private void OnDestroy()
         {
-            foreach (var provider in _maneuverabilityProviders)
+            foreach (var provider in _detectionProviders)
             {
                 provider.DetectionChanged -= CalculateCurrentManeuverability;
             }

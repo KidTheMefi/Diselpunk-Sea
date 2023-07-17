@@ -26,9 +26,9 @@ namespace SomeMenu
             _menuButtons.AddButton("Frigate", () => ShipSelected.Invoke(PlayerShipPrefabs.FrigatePrefab));
             _menuButtons.AddButton("TestShip", () => ShipSelected.Invoke(PlayerShipPrefabs.TestShipPrefab));
             
-            _menuButtons.ShowMenu("BattleShip - big ship with 4 different type artillery position. " +
-                "\nIronClad - ship with better armor and 3 default artillery position. " +
-                "\nFrigate - ship with great maneuverability and 3 light artillery position. ");
+            _menuButtons.ShowMenu("BattleShip - big ship with 4 artillery position. " +
+                "\nIronClad - ship with better armor and 3 artillery position. " +
+                "\nFrigate - ship with great maneuverability, 2 artillery position and torpedo tube. ");
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using DefaultNamespace;
 using InterfaceProviders;
+using ModulesScripts.ModulesSetup;
 using UnityEngine;
 
 namespace ModulesScripts
@@ -20,12 +21,13 @@ namespace ModulesScripts
             UpdateDescription();
         }
 
-        /*public void Setup(int speed, int maneuverabilityValue)
+        public void Setup(BaseCaptainsBridgeSetup baseCaptainsBridgeSetup)
         {
-            _maneuverabilityValue = maneuverabilityValue;
-            _speed = speed;
+            _maneuverabilityValue = baseCaptainsBridgeSetup.ManeuverabilityValue;
+            _detectionValue = baseCaptainsBridgeSetup.DetectionValue;
+            BaseSetup(baseCaptainsBridgeSetup);
             UpdateDescription();
-        }*/
+        }
 
         private void UpdateDescription()
         {

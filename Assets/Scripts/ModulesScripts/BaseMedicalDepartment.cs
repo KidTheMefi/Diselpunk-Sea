@@ -1,5 +1,6 @@
 ﻿using System;
 using InterfaceProviders;
+using ModulesScripts.ModulesSetup;
 using UnityEngine;
 
 namespace ModulesScripts
@@ -14,6 +15,13 @@ namespace ModulesScripts
         public int GetMedicineSkill()
         {
             return IsInOrder ? _medicineSkill : 0;
+        }
+        
+        public void Setup(BaseMedicalDepartmentSetup setup)
+        {
+            _medicineSkill = setup.MedicineSkill;
+            BaseSetup(setup);
+            UpdateDescription();
         }
         
         private void Start()

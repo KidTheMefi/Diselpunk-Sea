@@ -21,7 +21,7 @@ namespace SomeMenu
 
         public void BeginEvent()
         {
-            bool ambushChecked = _playerShip.DetectionValue() > _ambushValue;
+            bool ambushChecked = _playerShip.DetectionValue > _ambushValue;
 
             string menuInfo = ambushChecked ? "On the way to the source of the signal, your officers notice strange interference in the radio. There is a chance that an ambush is ahead."
                 : "You see a ship with a big cloud of smoke around it.";
@@ -45,7 +45,7 @@ namespace SomeMenu
                         modulePlace.DamageDurability(Random.Range(1, 3));
                     }
 
-                    EndEvent endEvent = new EndEvent(_menuButtons, () => MenuSignal.Instance.InvokeBattleWith(EnemyShipPrefabs.IroncladPrefab));
+                    EndEvent endEvent = new EndEvent(_menuButtons, () => MenuSignal.Instance.InvokeBattleWith(EnemyShipPrefabs.GetRandomShipPrefab()));
                     endEvent.BeginEvent("Suddenly, volley of artillery fire come out of the smoke, damaging your ship. It's enemy ambush.", "Battle");
                 });
             }

@@ -27,6 +27,10 @@ public class Fire : MonoBehaviour
 
     private void ShowFireLevel(int lvl)
     {
+        if (_fireLevelSpriteRenderer == null)
+        {
+            return;
+        }
         _fireLevelSpriteRenderer.size = new Vector2(_fireLevelSpriteRenderer.size.x, 0.5f + lvl * 2.5f / 100);
     }
     
@@ -66,7 +70,6 @@ public class Fire : MonoBehaviour
             _shipModulePlace.DamageDurability(1);
         }
         FireVisual().Forget();
-        
         FireValueChangePerSecond();
         
         if (!_cancellationTokenSource.IsCancellationRequested)

@@ -3,6 +3,7 @@ using System.Threading;
 using Cysharp.Threading.Tasks;
 using DefaultNamespace;
 using InterfaceProviders;
+using ModulesScripts.ModulesSetup;
 using ShipCharacteristics;
 using TMPro;
 using UnityEngine;
@@ -29,6 +30,14 @@ namespace ModulesScripts
         private bool _inBattle;
         private CancellationTokenSource _fireCTS;
 
+        public void Setup(BaseTorpedoTubeSetup setup)
+        {
+            _reloadTime = setup.ReloadTime;
+            _aiming = setup.AimingTime;
+            _torpedo = setup.Torpedo;
+            BaseSetup(setup);
+            UpdateDescription();
+        }
         
         public void SetShipTarget(BaseShip targetShip)
         {
@@ -147,6 +156,10 @@ namespace ModulesScripts
         private void OnDisable()
         {
             SetActive(false);
+        }
+        private void OnDestroy()
+        {
+            _fireCTS?.Cancel();
         }
     }
 }

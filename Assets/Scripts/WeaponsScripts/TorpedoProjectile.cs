@@ -26,7 +26,7 @@ namespace DefaultNamespace
         [SerializeField]
         private TextMeshPro _textMeshPro;
         [SerializeField]
-        float _percentPerManeuverability = 5f;
+        float _percentPerManeuverability = 7.5f;
         [SerializeField, Range(0.5f, 2f)]
         private float _checkTime;
         private float _fullMoveTime = 10f;
@@ -101,7 +101,7 @@ namespace DefaultNamespace
             _torpedoObject.SetActive(false);
             _detectedSpriteRenderer.enabled = false;
             var timeSecond = DateTime.Now - _startTime;
-            Debug.Log($"Torpedo reach target at: {timeSecond.TotalSeconds}");
+            //Debug.Log($"Torpedo reach target at: {timeSecond.TotalSeconds}");
             HitCheck();
         }
 
@@ -118,6 +118,7 @@ namespace DefaultNamespace
             Debug.Log($"Miss chance {random}/{missChance}%. {missed}");
             if (random < missChance)
             {
+                Debug.Log("Missed");
                 FailAsync("Missed").Forget();
             }
             else
@@ -128,21 +129,16 @@ namespace DefaultNamespace
 
         private void TorpedoContact()
         {
-            Debug.Log("Contact");
-            int damage = _torpedo.Damage - _targetPlace.Armor;
+            int damage = _torpedo.Damage;
 
+            //TODO: THINK ABOUT TORPEDO DAMAGE FORMULA!!!!!
             if (damage > 0)
             {
                 _targetPlace.DamageDurability(damage);
-                _targetPlace.DamageCrew(damage);
-                _targetShip.DamageRecoverAbility(damage);
+                _targetPlace.DamageCrew(Random.Range(0,damage));
+                _targetShip.ShipFloodabilityHandler.CreateHole(_targetPlace, damage- _targetPlace.Armor);
                 ExplosionVisual().Forget();
             }
-            else
-            {
-                FailAsync("Armor protect").Forget();
-            }
-           
         }
 
         private async UniTask FailAsync(string text = null)
@@ -177,7 +173,7 @@ namespace DefaultNamespace
             {
                 return;
             }
-            int sonarValue = _torpedo.SonarValue;
+            int sonarValue = _targetShip.SonarDetection;
             var detectionChance = (_torpedo.Noise + sonarValue * 2 + round) * 2; // TODO: Think about Detection formula
 
             var random = Random.Range(0, 100);

@@ -313,7 +313,7 @@ GameObject:
   - component: {fileID: 7203375083193193263}
   - component: {fileID: 1724303139810082352}
   m_Layer: 0
-  m_Name: Square
+  m_Name: Image
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -439,6 +439,7 @@ MonoBehaviour:
   minCrewRequired: 1
   minDurabilityRequired: 2
   moduleDescription: {fileID: 1557340686620209666}
+  _spriteRenderer: {fileID: 1724303139810082352}
   _timerText: {fileID: 8613341760767050275}
   _reloadTime: 4
   _aiming: 5

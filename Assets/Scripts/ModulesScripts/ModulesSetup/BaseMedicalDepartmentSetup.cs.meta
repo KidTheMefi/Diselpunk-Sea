@@ -1,0 +1,13 @@
+fileFormatVersion: 2
+guid: eddc83c6c56b4ed6b77b094a19b576fd
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - _moduleImage: {instanceID: 0}
+  - baseMedicalDepartmentSetupPrefab: {fileID: 6987425497372867216, guid: 5fce0ea6e878e3b43aef492b6c2c67a3, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

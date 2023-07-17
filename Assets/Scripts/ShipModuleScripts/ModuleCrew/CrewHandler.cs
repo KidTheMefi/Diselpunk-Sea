@@ -154,12 +154,12 @@ namespace ShipModuleScripts.ModuleCrew
                 return;
             }
             CrewChangeRestore(_crewRestore.isOn);
-            DamageHighlight().Forget();
+            DamageHighlightAsync().Forget();
             _crewSignals.CrewMembersDamagedInvoke(value);
             ChangeCrewFor(-value);
         }
 
-        private async UniTask DamageHighlight()
+        private async UniTask DamageHighlightAsync()
         {
             _damageSpriteRenderer.color = Color.red;
             await UniTask.Delay(TimeSpan.FromSeconds(0.2f), cancellationToken: _crewRestoreCTS.Token);

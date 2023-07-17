@@ -1,0 +1,13 @@
+fileFormatVersion: 2
+guid: dc6a7c23bc0e44179859ca95aed1f1df
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - _moduleImage: {instanceID: 0}
+  - _baseCaptainsBridgePrefab: {fileID: 6126663673458141084, guid: 69685488a66e99946bb71f079f271326, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

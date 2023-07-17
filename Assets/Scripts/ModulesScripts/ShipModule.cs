@@ -1,4 +1,5 @@
-﻿using TMPro;
+﻿using ModulesScripts.ModulesSetup;
+using TMPro;
 using UnityEngine;
 
 namespace ModulesScripts
@@ -16,6 +17,8 @@ namespace ModulesScripts
         [SerializeField]
         protected ModuleDescription moduleDescription;
         protected bool hasCommanderOnDuty = false;
+        [SerializeField]
+        private SpriteRenderer _spriteRenderer;
         
         public int MinCrewRequired => minCrewRequired > crewFull ? crewFull : minCrewRequired;
         public int CrewFull => crewFull;
@@ -24,6 +27,20 @@ namespace ModulesScripts
         public bool IsInOrder { get; protected set; }
 
 
+
+        protected void BaseSetup( BaseModuleSetup baseModuleSetup)
+        {
+            crewFull = baseModuleSetup.CrewFull;
+            baseDurability = baseModuleSetup.BaseDurability;
+            minCrewRequired = baseModuleSetup.MinCrewRequired;
+            minDurabilityRequired = baseModuleSetup.MinDurabilityRequired;
+            if (baseModuleSetup.ModuleImage != null && _spriteRenderer != null)
+            {
+                _spriteRenderer.sprite = baseModuleSetup.ModuleImage;
+            }
+        }
+        
+        
         public virtual void ClickOn()
         {
         }

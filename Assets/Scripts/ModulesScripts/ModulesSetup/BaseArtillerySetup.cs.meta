@@ -1,0 +1,13 @@
+fileFormatVersion: 2
+guid: b5f72faeee4a440580da60f169fca5ef
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - _moduleImage: {instanceID: 0}
+  - _baseArtilleryPrefab: {fileID: 3813497327194521024, guid: 2fec914833077044b979ccbf1f83e48c, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

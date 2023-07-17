@@ -54,9 +54,10 @@ MonoBehaviour:
   minCrewRequired: 1
   minDurabilityRequired: 1
   moduleDescription: {fileID: 8709204232502305451}
+  _spriteRenderer: {fileID: 8839566134569741977}
   _timerText: {fileID: 1930138457748574858}
   _reloadTime: 4
-  _aiming: 6
+  _aiming: 7
   _torpedo: {fileID: 11400000, guid: 2f41bdcc25db51143aa302a5f61d9634, type: 2}
 --- !u!1 &1972112644902404320
 GameObject:
@@ -69,7 +70,7 @@ GameObject:
   - component: {fileID: 1060036378395607942}
   - component: {fileID: 8839566134569741977}
   m_Layer: 0
-  m_Name: Square
+  m_Name: Image
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

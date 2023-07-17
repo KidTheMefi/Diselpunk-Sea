@@ -1,6 +1,7 @@
 ﻿using System;
 using DefaultNamespace;
 using InterfaceProviders;
+using ModulesScripts.ModulesSetup;
 using UnityEngine;
 
 namespace ModulesScripts
@@ -12,7 +13,14 @@ namespace ModulesScripts
         private int _detectionValue;
         
         private BaseShip _targetShip;
-        
+
+
+        public void Setup(BaseObservationPostSetup setup)
+        {
+            _detectionValue = setup.DetectionValue;
+            BaseSetup(setup);
+            UpdateDescription();
+        }
         
         public int GetDetection()
         {

@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc6a7c23bc0e44179859ca95aed1f1df, type: 3}
+  m_Name: Quick Captains Bridge Setup
+  m_EditorClassIdentifier: 
+  _moduleImage: {fileID: 0}
+  crewFull: 2
+  baseDurability: 2
+  minCrewRequired: 2
+  minDurabilityRequired: 2
+  _baseCaptainsBridgePrefab: {fileID: 6126663673458141084, guid: 69685488a66e99946bb71f079f271326, type: 3}
+  _maneuverabilityValue: 3
+  _detectionValue: 1

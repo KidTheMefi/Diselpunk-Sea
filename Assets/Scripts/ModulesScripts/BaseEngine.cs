@@ -1,6 +1,7 @@
 ﻿using System;
 using DefaultNamespace;
 using InterfaceProviders;
+using ModulesScripts.ModulesSetup;
 using UnityEngine;
 
 namespace ModulesScripts
@@ -15,17 +16,14 @@ namespace ModulesScripts
         [SerializeField]
         private int _speed;
 
-        private void Start()
-        {
-            UpdateDescription();
-        }
-
-        /*public void Setup(int speed, int maneuverabilityValue)
+        
+        public void Setup(int speed, int maneuverabilityValue, BaseModuleSetup baseModuleSetup, Sprite moduleImage = null)
         {
             _maneuverabilityValue = maneuverabilityValue;
             _speed = speed;
+            BaseSetup(baseModuleSetup);
             UpdateDescription();
-        }*/
+        }
 
         private void UpdateDescription()
         {

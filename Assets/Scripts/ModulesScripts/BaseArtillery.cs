@@ -3,6 +3,7 @@ using System.Threading;
 using Cysharp.Threading.Tasks;
 using DefaultNamespace;
 using InterfaceProviders;
+using ModulesScripts.ModulesSetup;
 using ShipCharacteristics;
 using TMPro;
 using UnityEngine;
@@ -33,6 +34,16 @@ namespace ModulesScripts
         private bool _inBattle;
         private CancellationTokenSource _fireCTS;
         private ShipModulePlace _targetPlace;
+
+
+        public virtual void Setup(BaseArtillerySetup baseArtillerySetup)
+        {
+            _reloadTime = baseArtillerySetup.ReloadTime;
+            _aiming = baseArtillerySetup.AimingTime;
+            _shell = baseArtillerySetup.GetShell();
+            BaseSetup(baseArtillerySetup);
+            UpdateDescription();
+        }
         
         public void SetShipTarget(BaseShip targetShip)
         {
@@ -168,7 +179,7 @@ namespace ModulesScripts
             //_timerText.text = "";
         }
 
-        private void UpdateDescription()
+        protected void UpdateDescription()
         {
             string description = $"Artillery. \n" +
                 $"{GetShell().BaseDamage} Damage.  " +
@@ -219,6 +230,10 @@ namespace ModulesScripts
         private void OnDisable()
         {
             SetActive(false);
+        }
+        private void OnDestroy()
+        {
+            _fireCTS?.Cancel();
         }
     }
 }

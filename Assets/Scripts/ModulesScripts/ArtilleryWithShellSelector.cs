@@ -3,6 +3,7 @@ using System.Threading;
 using Cysharp.Threading.Tasks;
 using DefaultNamespace;
 using InterfaceProviders;
+using ModulesScripts.ModulesSetup;
 using ShellSelectorScripts;
 using ShipCharacteristics;
 using UnityEngine;
@@ -20,6 +21,13 @@ namespace ModulesScripts
         public void SetShellsHandler(ShellsHandler shellsHandler)
         {
             _thisShipShellsHandler = shellsHandler;
+        }
+        
+        public override void Setup(BaseArtillerySetup baseArtillerySetup)
+        {
+            base.Setup(baseArtillerySetup);
+            _selectedShell = _shell;
+            UpdateDescription();
         }
         
         private void Awake()

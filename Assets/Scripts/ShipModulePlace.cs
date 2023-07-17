@@ -16,6 +16,9 @@ public class ShipModulePlace : MonoBehaviour
 
     [SerializeField]
     private Fire _fire;
+    [SerializeField]
+    private GameObject _statusIconsPlace;
+    public GameObject StatusIconsPlace => _statusIconsPlace;
 
     [SerializeField]
     private ShipModule _shipModulePrefab;
@@ -30,22 +33,31 @@ public class ShipModulePlace : MonoBehaviour
 
     private Commander _commanderOnPost;
     public Commander CommanderOnPost => _commanderOnPost;
+    public bool IsCommanderOnPost => _commanderOnPost != null;
+    
     private ShipPlaceSignal _shipPlaceSignal;
 
     private void Awake() 
     {
-        if (_shipModulePrefab != null)
+        /*if (_shipModulePrefab != null)
         {
             _shipModule = Instantiate(_shipModulePrefab, transform);
             _shipModule.transform.localPosition = Vector3.back*0.5f;
-        }
+        }*/
 
         _fire.Setup(this);
         _crewHandler.FunctionalityChange += OnCrewFunctionalityChanged;
         _durabilityHandler.FunctionalityChange += OnFunctionalityChange;
     }
 
-    public void Setup( ModuleLocation moduleLocation, ShipPlaceSignal shipPlaceSignal)
+    public void SetModule(ShipModule shipModule)
+    {
+        _shipModule = shipModule;
+        _shipModule.transform.SetParent(transform);
+        _shipModule.transform.localPosition = Vector3.back*0.5f; 
+    }
+
+    public void SetLocationSignal( ModuleLocation moduleLocation, ShipPlaceSignal shipPlaceSignal)
     {
         ModuleLocation = moduleLocation;
         _shipPlaceSignal = shipPlaceSignal;
@@ -144,7 +156,7 @@ public class ShipModulePlace : MonoBehaviour
         fireExtinguishing += CommanderOnPost == null ? 0 : 10;
         return fireExtinguishing;
     }
-
+    
     public void AddFire(int fireLvl)
     {
         _fire.AddFire(fireLvl);
@@ -173,6 +185,7 @@ public class ShipModulePlace : MonoBehaviour
             _shipModule.ShowDescription(value);
         }
         
+        _statusIconsPlace.SetActive(value);
     }
     private void OnMouseDown()
     {

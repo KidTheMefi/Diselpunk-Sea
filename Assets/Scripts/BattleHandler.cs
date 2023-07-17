@@ -73,8 +73,15 @@ public class BattleHandler : MonoBehaviour
 
     private void Unsub()
     {
-        _baseShipPlayer.EndBattleEvent -= OnPlayerEndBattleEvent;
-        _baseShipEnemy.EndBattleEvent -= EnemyEndBattleEvent;
+        if (_baseShipPlayer !=null)
+        {
+            _baseShipPlayer.EndBattleEvent -= OnPlayerEndBattleEvent;
+        }
+
+        if (_baseShipEnemy != null)
+        {
+            _baseShipEnemy.EndBattleEvent -= EnemyEndBattleEvent;
+        }
     }
     private void EnemyEndBattleEvent(ShipEndBattle end)
     {
@@ -178,7 +185,10 @@ public class BattleHandler : MonoBehaviour
     private void OnDestroy()
     {
         _shipSelect.ShipSelected -= ShipSelected;
-        _lootAfterBattle.LeaveLoot -= OnLeaveLoot;
+        if (_lootAfterBattle!= null)
+        {
+            _lootAfterBattle.LeaveLoot -= OnLeaveLoot;
+        }
         Unsub();
     }
 }

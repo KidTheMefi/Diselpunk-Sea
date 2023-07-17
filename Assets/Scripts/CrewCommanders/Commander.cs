@@ -32,6 +32,9 @@ namespace CrewCommanders
 
         [SerializeField]
         private SpriteRenderer _selectRenderer;
+        
+        
+        
         private void OnMouseDown()
         {
             if (Moving)
